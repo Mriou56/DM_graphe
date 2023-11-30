@@ -137,9 +137,12 @@ class GraphList(Graph):
         :return: The weight of the edge
         """
         tab_edge = self.edges()
-        for edge in tab_edge:
-            if edge[0] == vertex1.coord and edge[1][0] == vertex2.coord or edge[0] == vertex2.coord and edge[1][0] == vertex1.coord:
-                return edge[1][1]
+        for e1, succs in tab_edge:
+            for e2, label in succs:
+                if (e1, e2) == (vertex1, vertex2):
+                    return label
+        raise Exception(f"vertex doen'st exists : ({vertex1}, {vertex2})")
+
 
     def get_neighbour(self, vertex:Vertex):
         """
