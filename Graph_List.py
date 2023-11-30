@@ -20,9 +20,9 @@ class GraphList(Graph):
                 self.graph_dict[vertex2.coord].append((vertex1.coord, label))
 
         else:
-            self.graph_dict[vertex1.coord].append(vertex2.coord)
+            self.graph_dict[vertex1].append(vertex2)
             if not self.directed:
-                self.graph_dict[vertex2.coord].append(vertex1.coord)
+                self.graph_dict[vertex2].append(vertex1)
 
     def add_vertex(self, coord, terrain, alt):
         """
@@ -33,7 +33,7 @@ class GraphList(Graph):
         :return:
         """
         v = Vertex(coord, terrain, alt)
-        self.graph_dict[v.coord] = []
+        self.graph_dict[v] = []
 
     def has_edge(self, vertex1:Vertex, vertex2:Vertex, label=None):
         """Say if an edge between two vertex exist"""
@@ -137,14 +137,14 @@ class GraphList(Graph):
         raise Exception(f"vertex doen'st exists : ({vertex1}, {vertex2})")
 
 
-    def get_neighbour(self, vertex:Vertex):
+    def get_neighbour(self, x, y):
         """
         Get the neighbour of a vertex with it coordinates
         :param vertex: one vertex
         :return: the coordinates of the vertex next to the parameter's vertex
         """
-        if vertex.coord[1] % 2 == 0:
-            res = [(vertex.coord[0] + dx, vertex.coord[1] + dy) for dx, dy in ((1, 0), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1))]
+        if y % 2 == 0:
+            res = [(x + dx, y + dy) for dx, dy in ((1, 0), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1))]
         else:
-            res = [(vertex.coord[0] + dx, vertex.coord[1] + dy) for dx, dy in ((1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1))]
+            res = [(x + dx, y + dy) for dx, dy in ((1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1))]
         return [(dx, dy) for dx, dy in res if 0 <= dx < 15 and 0 <= dy < 15]
