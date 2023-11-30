@@ -78,12 +78,13 @@ if __name__ == "__main__":
 
     # CREATION D'UN GRAPHE
     graphe_grid = GraphList(False)
+    #width
     for i in range(0, 15):
         for j in range(0, 15):
             t = random.choice(graphe_grid.dict_elem)
             alt = random.randrange(0, 10)
             graphe_grid.add_vertex((i,j), t, alt)
-
+    #height
     for i in range(0, 15):
         for j in range(0, 15):
             list_neighbour = graphe_grid.get_neighbour((i,j))

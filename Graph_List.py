@@ -10,9 +10,9 @@ class GraphList(Graph):
     def __init__(self, directed):
         super().__init__(directed)
         self.graph_dict = {}
-        self.dict_elem = ['water','path','grass','stone','snow','fire','obsidian']
+        self.dict_elem = ['water', 'path', 'grass', 'stone', 'snow', 'fire', 'obsidian']
 
-    def add_edge(self, vertex1:Vertex, vertex2:Vertex, label=None):
+    def add_edge(self, vertex1: Vertex, vertex2: Vertex, label=None):
         """To add a new edge to the graph"""
         if label is not None:
             self.graph_dict[vertex1.coord].append((vertex2.coord, label))
@@ -35,7 +35,7 @@ class GraphList(Graph):
         v = Vertex(coord, terrain, alt)
         self.graph_dict[v.coord] = []
 
-    def has_edge(self, vertex1:Vertex, vertex2:Vertex, label=None):
+    def has_edge(self, vertex1: Vertex, vertex2: Vertex, label=None):
         """Say if an edge between two vertex exist"""
         if label is not None:
             return (vertex2.coord, label) in self.graph_dict[vertex1.coord]
@@ -55,7 +55,7 @@ class GraphList(Graph):
                 list_l.append(k[1])
         return list_l
 
-    def pred(self, vertex:Vertex):
+    def pred(self, vertex: Vertex):
         """ If a graph is directed
             Return a list of all the predecessor of a vertex"""
         list_pred = []
@@ -69,12 +69,12 @@ class GraphList(Graph):
         for key in self.graph_dict:
             print("(vertex1: " + str(key) + "; vertex: " + str(self.graph_dict[key]) + ")")
 
-    def succ(self, vertex:Vertex):
+    def succ(self, vertex: Vertex):
         """ If a graph is directed
             Return a list of all the successor of a vertex"""
         return self.graph_dict[vertex.coord]
 
-    def cycled(self, ver:Vertex):
+    def cycled(self, ver: Vertex):
         """
         If a graph is a cycle
         :return: True
@@ -104,7 +104,7 @@ class GraphList(Graph):
                         return True
         return False
 
-    def remove_edge(self, vertex1:Vertex, vertex2:Vertex, label=None):
+    def remove_edge(self, vertex1: Vertex, vertex2: Vertex, label=None):
         """
         Delete an edge from a graph
         :param vertex1: The first vertex of the edge
@@ -122,7 +122,7 @@ class GraphList(Graph):
             if not self.directed:
                 self.graph_dict[vertex2.coord].remove(vertex1.coord)
 
-    def get_weight(self, vertex1:Vertex, vertex2:Vertex):
+    def get_weight(self, vertex1: Vertex, vertex2: Vertex):
         """
         Get the weight of an edge
         :param vertex1: The first vertex of the edge
@@ -136,15 +136,16 @@ class GraphList(Graph):
                     return label
         raise Exception(f"vertex doen'st exists : ({vertex1}, {vertex2})")
 
-
-    def get_neighbour(self, vertex:Vertex):
+    def get_neighbour(self, vertex: Vertex):
         """
         Get the neighbour of a vertex with it coordinates
         :param vertex: one vertex
         :return: the coordinates of the vertex next to the parameter's vertex
         """
         if vertex.coord[1] % 2 == 0:
-            res = [(vertex.coord[0] + dx, vertex.coord[1] + dy) for dx, dy in ((1, 0), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1))]
+            res = [(vertex.coord[0] + dx, vertex.coord[1] + dy) for dx, dy in
+                   ((1, 0), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1))]
         else:
-            res = [(vertex.coord[0] + dx, vertex.coord[1] + dy) for dx, dy in ((1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1))]
+            res = [(vertex.coord[0] + dx, vertex.coord[1] + dy) for dx, dy in
+                   ((1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1))]
         return [(dx, dy) for dx, dy in res if 0 <= dx < 15 and 0 <= dy < 15]
