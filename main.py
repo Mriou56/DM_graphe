@@ -67,7 +67,18 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+
+    # CREATION D'UNE GRILLE 15x15
+    hex_grid = HexGridViewer(15, 15)
+
+    # CREATION D'UN GRAPHE
+
+
+    # AFFICHAGE DE LA GRILLE
+    # alias permet de renommer les noms de la légende pour des couleurs spécifiques.
+    # debug_coords permet de modifier l'affichage des coordonnées sur les cases.
+    hex_grid.show(alias={"blue": "water", "white": "void", "grey": "rock"}, debug_coords=False)
 
 # # Quel algorithme utiliser pour générer une zone régulière qui s'étend sur la carte (i.e. toutes les cases à
 # distance $i$ d'une case)?
