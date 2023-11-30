@@ -85,6 +85,7 @@ if __name__ == "__main__":
             graphe_grid.add_vertex((i,j), t, alt)
 
     for v in graphe_grid.vertex():
+        # MODIFICATION DE LA COULEUR D'UNE CASE
         hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
         list_neighbour = graphe_grid.get_neighbour(v.coord[0], v.coord[1])
         for n in list_neighbour:
@@ -92,14 +93,13 @@ if __name__ == "__main__":
                 if v2.coord == n:
                     graphe_grid.add_edge(v, v2)
 
-    # MODIFICATION DE LA COULEUR D'UNE CASE
-
 
 
     # AFFICHAGE DE LA GRILLE
     # alias permet de renommer les noms de la légende pour des couleurs spécifiques.
     # debug_coords permet de modifier l'affichage des coordonnées sur les cases.
-    hex_grid.show(alias={"blue": "water", "brown": "path", "green": "grass", "grey": "stone", "white": "snow", "red": "fire", "black": "obsidian"}, debug_coords=False)
+    hex_grid.show(alias={"blue": "water", "brown": "path", "green": "grass", "grey": "stone", "white": "snow",
+                         "red": "fire", "black": "obsidian"}, debug_coords=False)
 
 # # Quel algorithme utiliser pour générer une zone régulière qui s'étend sur la carte (i.e. toutes les cases à
 # distance $i$ d'une case)?

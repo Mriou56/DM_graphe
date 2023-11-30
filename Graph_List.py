@@ -148,3 +148,17 @@ class GraphList(Graph):
         else:
             res = [(x + dx, y + dy) for dx, dy in ((1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1))]
         return [(dx, dy) for dx, dy in res if 0 <= dx < 15 and 0 <= dy < 15]
+
+    def find_higher(self):
+        """
+        Get the higher vertex of the graph
+        :return:
+        """
+        max = 0
+        v_max = None
+        for v in self.vertex():
+            if v.alt > max:
+                max = v.alt
+                v_max = v
+        return v_max
+
