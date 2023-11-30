@@ -78,14 +78,14 @@ if __name__ == "__main__":
 
     # CREATION D'UN GRAPHE
     graphe_grid = GraphList(False)
-    for i in range(0, 255):
-        for j in range(0, 255):
+    for i in range(0, 15):
+        for j in range(0, 15):
             t = random.choice(graphe_grid.dict_elem)
             alt = random.randrange(0, 10)
             graphe_grid.add_vertex((i,j), t, alt)
 
-    for i in range(0, 255):
-        for j in range(0, 255):
+    for i in range(0, 15):
+        for j in range(0, 15):
             list_neighbour = graphe_grid.get_neighbour((i,j))
             for n in list_neighbour:
                 graphe_grid.add_edge((i,j), n)
