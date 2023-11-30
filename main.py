@@ -86,8 +86,7 @@ if __name__ == "__main__":
 
     for i in range(0, 255):
         for j in range(0, 255):
-
-
+            pass
 
     # AFFICHAGE DE LA GRILLE
     # alias permet de renommer les noms de la légende pour des couleurs spécifiques.
