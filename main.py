@@ -90,6 +90,7 @@ if __name__ == "__main__":
             for n in list_neighbour:
                 graphe_grid.add_edge((i,j), n)
 
+
     # AFFICHAGE DE LA GRILLE
     # alias permet de renommer les noms de la légende pour des couleurs spécifiques.
     # debug_coords permet de modifier l'affichage des coordonnées sur les cases.
