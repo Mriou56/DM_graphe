@@ -140,3 +140,15 @@ class GraphList(Graph):
         for edge in tab_edge:
             if edge[0] == vertex1.coord and edge[1][0] == vertex2.coord or edge[0] == vertex2.coord and edge[1][0] == vertex1.coord:
                 return edge[1][1]
+
+    def get_neighbour(self, vertex:Vertex):
+        """
+        Get the neighbour of a vertex with it coordinates
+        :param vertex: one vertex
+        :return: the coordinates of the vertex next to the parameter's vertex
+        """
+        if vertex.coord[1] % 2 == 0:
+            res = [(vertex.coord[0] + dx, vertex.coord[1] + dy) for dx, dy in ((1, 0), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1))]
+        else:
+            res = [(vertex.coord[0] + dx, vertex.coord[1] + dy) for dx, dy in ((1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1))]
+        return [(dx, dy) for dx, dy in res if 0 <= dx < 15 and 0 <= dy < 15]

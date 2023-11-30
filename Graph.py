@@ -114,3 +114,11 @@ class Graph(ABC):
         :return: The weight of the edge
         """
         pass
+    @abstractmethod
+    def get_neighbour(self, vertex):
+        """
+        Get the neighbour of a vertex with it coordinates
+        :param vertex: one vertex
+        :return: the coordinates of the vertex next to the parameter's vertex
+        """
+        pass

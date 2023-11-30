@@ -10,7 +10,11 @@ Contact: sebastien.gamblin@isen-ouest.yncrea.fr
 """
 
 from __future__ import annotations
+
 import random
+
+import Graph_List
+from Graph_List import *
 
 from Cercle import *
 from Rect import *
@@ -73,6 +77,16 @@ if __name__ == "__main__":
     hex_grid = HexGridViewer(15, 15)
 
     # CREATION D'UN GRAPHE
+    graphe_grid = GraphList(False)
+    for i in range(0, 255):
+        for j in range(0, 255):
+            t = random.choice(graphe_grid.dict_elem)
+            alt = random.randrange(0, 10)
+            graphe_grid.add_vertex((i,j), t, alt)
+
+    for i in range(0, 255):
+        for j in range(0, 255):
+
 
 
     # AFFICHAGE DE LA GRILLE
