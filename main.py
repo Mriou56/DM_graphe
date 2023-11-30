@@ -1,0 +1,83 @@
+"""
+Programme basique en python3.8 permettant via matplolib de visualiser une grille hexagonale.
+
+Elle propose simplement:
+ - l'affichage des hexagones, avec des couleurs et une opacité
+ - l'ajout de formes colorées sur les hexagones
+ - l'ajout de liens colorés entre les hexagones
+
+Contact: sebastien.gamblin@isen-ouest.yncrea.fr
+"""
+
+from __future__ import annotations
+import random
+
+from Cercle import *
+from Rect import *
+from HexGridViewer import *
+
+# il y a mieux en python :
+# - 3.11: Coords: AliasType = Tuple[int, int]
+# - 3.12: type Coords = Tuple[int, int]
+
+
+def main():
+    """
+    Fonction exemple pour présenter le programme ci-dessus.
+    """
+    # CREATION D'UNE GRILLE 15x15
+    hex_grid = HexGridViewer(15, 15)
+
+    # MODIFICATION DE LA COULEUR D'UNE CASE
+    # hex_grid.add_color(X, Y, color) où :
+    # - X et Y sont les coordonnées de l'hexagone et color la couleur associée à cet hexagone.
+    hex_grid.add_color(5, 5, "purple")
+    hex_grid.add_color(1, 0, "red")
+
+    # MODIFICATION DE LA TRANSPARENCE D'UNE CASE
+    # hex_grid.add_alpha(X, Y, alpha) où :
+    # - X et Y sont les coordonnées de l'hexagone et alpha la transparence associée à cet hexagone.
+    hex_grid.add_alpha(5, 5, 0.7)
+
+    # RECUPERATION DES VOISINS D'UNE CASE : ils sont entre 2 et 6.
+    # hex_grid.get_neighbours(X, Y)
+
+    for _x, _y in hex_grid.get_neighbours(5, 5):
+        hex_grid.add_color(_x, _y, "blue")
+        hex_grid.add_alpha(_x, _y, random.uniform(0.2, 1))
+
+    for _x, _y in hex_grid.get_neighbours(1, 0):
+        hex_grid.add_color(_x, _y, "pink")
+        hex_grid.add_alpha(_x, _y, random.uniform(0.2, 1))
+
+    # AJOUT DE SYMBOLES SUR LES CASES : avec couleur et bordure
+    # hex_grid.add_symbol(X, Y, FORME)
+    hex_grid.add_symbol(10, 8, Circle("red"))
+    hex_grid.add_symbol(9, 8, Rect("green"))
+    hex_grid.add_symbol(3, 4, Rect("pink", edgecolor="black"))
+
+    # AJOUT DE LIENS ENTRE LES CASES : avec couleur
+    hex_grid.add_link((5, 5), (6, 6), "red")
+    hex_grid.add_link((8, 8), (7, 8), "purple", thick=4)
+
+    # AFFICHAGE DE LA GRILLE
+    # alias permet de renommer les noms de la légende pour des couleurs spécifiques.
+    # debug_coords permet de modifier l'affichage des coordonnées sur les cases.
+    hex_grid.show(alias={"blue": "water", "white": "void", "grey": "rock"}, debug_coords=False)
+
+
+if __name__ == "__main__":
+    main()
+
+# # Quel algorithme utiliser pour générer une zone régulière qui s'étend sur la carte (i.e. toutes les cases à
+# distance $i$ d'une case)?
+
+# # Quel algorithme permettrait de tracer des rivières à partir d'un point donné sur la carte, en ajoutant une
+# contrainte d'altitude descendante en prenannt le chemin le plus long possible ?
+
+# # Quel algorithme utiliser pour aller d'un point A à un point B ?
+
+# # Quel algorithme utiliser pour créer un réseau de routes le moins couteux possible entre x villes, pour qu'elles
+# sont toutes interconnectées ?
+
+##
