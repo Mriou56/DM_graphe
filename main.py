@@ -85,11 +85,15 @@ if __name__ == "__main__":
             graphe_grid.add_vertex((i,j), t, alt)
 
     for v in graphe_grid.vertex():
+        hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
         list_neighbour = graphe_grid.get_neighbour(v.coord[0], v.coord[1])
         for n in list_neighbour:
             for v2 in graphe_grid.vertex():
                 if v2.coord == n:
                     graphe_grid.add_edge(v, v2)
+
+    # MODIFICATION DE LA COULEUR D'UNE CASE
+
 
 
     # AFFICHAGE DE LA GRILLE
