@@ -91,9 +91,7 @@ if __name__ == "__main__":
         hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
         list_neighbour = graphe_grid.get_neighbour(v.coord[0], v.coord[1])
         for n in list_neighbour:
-            for v2 in graphe_grid.vertex():
-                if v2.coord == n:
-                    graphe_grid.add_edge(v, v2)
+            graphe_grid.add_edge(v, n)
 
     #modifier la couleur en fonction de l'altitude plus c'est haut plus c'est transparant
 
