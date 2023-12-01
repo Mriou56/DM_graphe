@@ -10,9 +10,9 @@ class GraphList(Graph):
     def __init__(self, directed):
         super().__init__(directed)
         self.graph_dict = {}
-        self.dict_elem = ['royalblue','chocolate','forestgreen','grey','snow','red','black']
+        self.dict_elem = ['royalblue', 'chocolate', 'forestgreen', 'grey', 'snow', 'red', 'black']
 
-    def add_edge(self, vertex1:Vertex, vertex2:Vertex, label=None):
+    def add_edge(self, vertex1: Vertex, vertex2: Vertex, label=None):
         """To add a new edge to the graph"""
         if label is not None:
             self.graph_dict[vertex1.coord].append((vertex2.coord, label))
@@ -169,13 +169,26 @@ class GraphList(Graph):
                 v_max = v
         return v_max
 
-    def zone(self, v, dist):
+    def zone(self, v: Vertex, dist):
         """
         Get the area around a vertex
+        :param dist: dist of the area
         :param v: the center vertex
-        :param dist: the dist of the area
-        :return:
+        :return: zone of neighboor
         """
-
-
+        n = 0
+        list_neighboor = []
+        dic_color = {0: "black", 1: "red", 2:"orange", 3:"yellow"}
+        file = [v]
+        v.terrain = dic_color[n]
+        while n < dist:
+            for x in self.get_neighbour(file[0].coord[0], file[0].coord[1]):
+                if x in list_neighboor:
+                    pass
+                else:
+                    list_neighboor.append(x)
+                    x.terrain = dic_color[n+1]
+                    file.append(x)
+            file.pop(0)
+            n += 1
 
