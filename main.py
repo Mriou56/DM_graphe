@@ -20,6 +20,7 @@ from Cercle import *
 from Rect import *
 from HexGridViewer import *
 
+
 # il y a mieux en python :
 # - 3.11: Coords: AliasType = Tuple[int, int]
 # - 3.12: type Coords = Tuple[int, int]
@@ -82,7 +83,7 @@ if __name__ == "__main__":
         for j in range(0, 15):
             t = random.choice(graphe_grid.dict_elem)
             alt = random.uniform(0.2, 1)
-            graphe_grid.add_vertex((i,j), t, alt)
+            graphe_grid.add_vertex((i, j), t, alt)
 
     for v in graphe_grid.vertex():
         # MODIFICATION DE LA COULEUR D'UNE CASE
@@ -94,12 +95,13 @@ if __name__ == "__main__":
                 if v2.coord == n:
                     graphe_grid.add_edge(v, v2)
 
+    #modifier la couleur en fonction de l'altitude plus c'est haut plus c'est transparant
 
 
     # AFFICHAGE DE LA GRILLE
     # alias permet de renommer les noms de la légende pour des couleurs spécifiques.
     # debug_coords permet de modifier l'affichage des coordonnées sur les cases.
-    hex_grid.show(alias={"blue": "water", "brown": "path", "green": "grass", "grey": "stone", "white": "snow",
+    hex_grid.show(alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
                          "red": "fire", "black": "obsidian"}, debug_coords=False)
 
 # # Quel algorithme utiliser pour générer une zone régulière qui s'étend sur la carte (i.e. toutes les cases à
