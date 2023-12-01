@@ -150,8 +150,9 @@ class GraphList(Graph):
                 res = [(x + dx, y + dy) for dx, dy in ((1, 0), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1))]
             else:
                 res = [(x + dx, y + dy) for dx, dy in ((1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1))]
-            if 0 <= dx < 15 and 0 <= dy < 15 for dx, dy in res:
-                list_v.append(v)
+            for dx, dy in res:
+                if 0 <= dx < 15 and 0 <= dy < 15:
+                    list_v.append(v)
 
         return list_v
 
