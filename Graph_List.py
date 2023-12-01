@@ -162,3 +162,13 @@ class GraphList(Graph):
                 v_max = v
         return v_max
 
+    def zone(self, v, taille):
+        """
+        Get the area around a vertex
+        :param v: the center vertex
+        :param taille: the dist of the area
+        :return:
+        """
+
+
+
