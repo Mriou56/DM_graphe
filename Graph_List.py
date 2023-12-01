@@ -140,14 +140,20 @@ class GraphList(Graph):
     def get_neighbour(self, x, y):
         """
         Get the neighbour of a vertex with it coordinates
-        :param vertex: one vertex
+        :param x: abscissa coordinate of the vertex
+        :param y: ordinate coordinate of the vertex
         :return: the coordinates of the vertex next to the parameter's vertex
         """
-        if y % 2 == 0:
-            res = [(x + dx, y + dy) for dx, dy in ((1, 0), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1))]
-        else:
-            res = [(x + dx, y + dy) for dx, dy in ((1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1))]
-        return [(dx, dy) for dx, dy in res if 0 <= dx < 15 and 0 <= dy < 15]
+        list_v = []
+        for v in self.vertex():
+            if y % 2 == 0:
+                res = [(x + dx, y + dy) for dx, dy in ((1, 0), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1))]
+            else:
+                res = [(x + dx, y + dy) for dx, dy in ((1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1))]
+            if 0 <= dx < 15 and 0 <= dy < 15 for dx, dy in res:
+                list_v.append(v)
+
+        return list_v
 
     def find_higher(self):
         """
@@ -162,11 +168,11 @@ class GraphList(Graph):
                 v_max = v
         return v_max
 
-    def zone(self, v, taille):
+    def zone(self, v, dist):
         """
         Get the area around a vertex
         :param v: the center vertex
-        :param taille: the dist of the area
+        :param dist: the dist of the area
         :return:
         """
 
