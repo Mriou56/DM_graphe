@@ -81,12 +81,13 @@ if __name__ == "__main__":
     for i in range(0, 15):
         for j in range(0, 15):
             t = random.choice(graphe_grid.dict_elem)
-            alt = random.randrange(0, 10)
+            alt = random.uniform(0.2, 1)
             graphe_grid.add_vertex((i,j), t, alt)
 
     for v in graphe_grid.vertex():
         # MODIFICATION DE LA COULEUR D'UNE CASE
         hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
+        hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
         list_neighbour = graphe_grid.get_neighbour(v.coord[0], v.coord[1])
         for n in list_neighbour:
             for v2 in graphe_grid.vertex():
