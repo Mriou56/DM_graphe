@@ -10,7 +10,7 @@ class GraphList(Graph):
     def __init__(self, directed):
         super().__init__(directed)
         self.graph_dict = {}
-        self.dict_elem = ['blue','brown','green','grey','white','red','black']
+        self.dict_elem = ['royalblue','chocolate','forestgreen','grey','snow','red','black']
 
     def add_edge(self, vertex1:Vertex, vertex2:Vertex, label=None):
         """To add a new edge to the graph"""
