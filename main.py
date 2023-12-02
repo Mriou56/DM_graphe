@@ -93,8 +93,6 @@ if __name__ == "__main__":
         for n in list_neighbour:
             graphe_grid.add_edge(v, n)
 
-    #modifier la couleur en fonction de l'altitude plus c'est haut plus c'est transparant
-
 
     # AFFICHAGE DE LA GRILLE
     # alias permet de renommer les noms de la légende pour des couleurs spécifiques.
