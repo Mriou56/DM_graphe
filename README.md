@@ -92,3 +92,5 @@ Class Vertex :
 ```
 qui représente un sommet dans un graphe. Chaque sommet est caractérisé par ses coordonnées (coord), un type de terrain (terrain), et une altitude (alt).
 La méthode '__ init __' initialise les attributs du sommet lors de sa création.
+
+a finir je fais ça se soir
