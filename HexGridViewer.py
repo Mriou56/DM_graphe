@@ -14,13 +14,14 @@ from Forme import *
 
 Coords = Tuple[int, int]  # un simple alias de typage python
 
+
 class HexGridViewer:
     """
     Classe permettant d'afficher une grille hexagonale. Elle se crée via son constructeur avec deux arguments:
     la largeur et la hauteur.
     Deux attributs gèrent l'apparence des hexagones: colors et alpha, pour respectivement représenter la
     couleur et la transparence des hexagones.
-    Chaque hexagone est représenté par une tuple : (x, y) spécifique dans la grille. Ces tuples sont les clés
+    Chaque hexagone est représenté par un tuple : (x, y) spécifique dans la grille. Ces tuples sont les clés
     des dictionnaires colors et alpha, que vous pouvez modifier via les méthodes add_color et add_alpha.
 
     Il est aussi possible d'ajouter des symboles Rectangle ou Circle au milieu des hexagones, ainsi que des liens
@@ -117,7 +118,7 @@ class HexGridViewer:
                 hexagon.set_facecolor(self.__colors[(row, col)])
                 hexagon.set_alpha(self.__alpha[(row, col)])
 
-                # Ajoute du texte à l'hexagone
+                # Ajoute du texte à l'hexagone soit les coordonnées
                 if debug_coords:
                     text = f"({row}, {col})"  # Le texte que vous voulez afficher
                     ax.annotate(text, xy=center, ha='center', va='center', fontsize=8, color='black')
