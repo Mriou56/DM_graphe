@@ -58,7 +58,7 @@ Pour finir, la méthode get_neighbours,
 c'est elle qui nous permet de retourner les coordonnées des hexagones voisins d'un hexagone donné.
 Cette fonction nous sera utile dans les futures questions.
 
-Nous avons ensuite utilisé les fonctions réaliser lors des TP du jeudi matin afin d'implémenter un graphe.
+Nous avons ensuite utilisé et réadapté les fonctions réaliser lors des TP du jeudi matin afin d'implémenter un graphe.
 Comme nous avions à peu près le même code, cela a été plus simple.
 On a ainsi ajouté deux fichiers.
 Ces fichiers définissent des classes pour représenter des graphes, en particulier des graphes dirigés ou non dirigés avec une représentation sous forme de liste d'adjacence.
@@ -71,7 +71,10 @@ Cette classe propose des méthodes abstraites pour ajouter des sommets, des arê
 Les sous-classes de cette classe doivent implémenter ces méthodes pour créer des graphes spécifiques.
 
 
-C'est exactement ce que fait le fichier Graph_List.py, contenant la classe 'GraphList'.
+C'est exactement ce que fait le fichier Graph_List.py, contenant la classe : 
+```python
+Class GraphList :
+```
 Cette classe hérite de la classe abstraite 'Graph' et implémente des méthodes comme l'ajout de sommet et d'arêtes, la vérification de l'existence d'une arête, l'obtention de la liste des sommets, des labels, etc.
 
 Tous ces fichiers sont ensuite utilisés dans la main.py pour créer un programme qui génère une grille héxagonale. 
@@ -82,4 +85,10 @@ Il intègre les classes GraphList et HexGridViewer pour créer et afficher une g
 #### — de labeliser les sommets par un type de terrain de votre choix (herbe, montagne, route, eau, etc...) ;
 #### — de labeliser les sommets par une altitude.
 
-
+Afin de réaliser cette extension, nous avons décidé de creer un fichier vertex.py.
+contenant la classe :
+```python
+Class Vertex :
+```
+qui représente un sommet dans un graphe. Chaque sommet est caractérisé par ses coordonnées (coord), un type de terrain (terrain), et une altitude (alt).
+La méthode '__ init __' initialise les attributs du sommet lors de sa création.
