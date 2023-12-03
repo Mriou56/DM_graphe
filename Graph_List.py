@@ -2,6 +2,7 @@
 from abc import ABC, abstractmethod
 from Graph import *
 from Vertex import *
+from HexGridViewer import *
 import random
 
 
@@ -143,6 +144,8 @@ class GraphList(Graph):
         :param x: abscissa coordinate of the vertex
         :param y: ordinate coordinate of the vertex
         :return: the coordinates of the vertex next to the parameter's vertex
+
+        reprendre dans le code du prof in res if 0 <= dx < self.__width and 0 <= dy < self.__height
         """
         list_v = []
 

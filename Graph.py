@@ -36,7 +36,7 @@ class Graph(ABC):
 
     def edges(self):
         """Return a tuple list which match with the two vertex of one edge with all the edges of the graph"""
-        """Peut-être prendre a l'avenir qui est tout de même plus optimisé"""
+        """Peut-être prendre la mienne a l'avenir qui est tout de même plus optimisé"""
         list_v = self.vertex()
         list_e = []
         list_l = self.label()
