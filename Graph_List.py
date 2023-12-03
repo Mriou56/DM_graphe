@@ -145,13 +145,14 @@ class GraphList(Graph):
         :return: the coordinates of the vertex next to the parameter's vertex
         """
         list_v = []
+
+        if y % 2 == 0:
+            res = [(x + dx, y + dy) for dx, dy in ((1, 0), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1))]
+        else:
+            res = [(x + dx, y + dy) for dx, dy in ((1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1))]
         for v in self.vertex():
-            if y % 2 == 0:
-                res = [(x + dx, y + dy) for dx, dy in ((1, 0), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1))]
-            else:
-                res = [(x + dx, y + dy) for dx, dy in ((1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1))]
             for dx, dy in res:
-                if 0 <= dx < 15 and 0 <= dy < 15:
+                if dx == v.coord[0] and dy == v.coord[1]:
                     list_v.append(v)
 
         return list_v
@@ -177,7 +178,35 @@ class GraphList(Graph):
         :return: zone of neighboor
         """
         n = 0
-        list_neighboor = []
+        v.terrain = 'black'
+        dic_color = {0: "black", 1: "red", 2: "orange", 3: "yellow", 4: "pink", 5:'purple'}
+        neighbour = [v]
+
+        def color_n(voisins, color):
+            for next in voisins:
+                if next.terrain == 'snow':
+                    next.terrain = color
+                    neighbour.append(next)
+
+        color_n(self.get_neighbour(neighbour[0].coord[0], neighbour[0].coord[1]), dic_color[n+1])
+        while n < dist:
+            n += 1
+            v = self.get_neighbour(neighbour[0].coord[0], neighbour[0].coord[1])
+            print(v)
+            for next in v:
+                print(next.coord)
+                color_n(self.get_neighbour(next.coord[0], next.coord[1]), dic_color[n+1])
+                neighbour.pop(0)
+
+
+
+
+
+
+        '''
+        Ton code, je teste autre chose, ca marche pas bien j'ai une grille toute rouge
+        n = 0
+        list_neighboor = [v]
         dic_color = {0: "black", 1: "red", 2:"orange", 3:"yellow"}
         file = [v]
         v.terrain = dic_color[n]
@@ -187,8 +216,11 @@ class GraphList(Graph):
                     pass
                 else:
                     list_neighboor.append(x)
-                    x.terrain = dic_color[n+1]
+                    if x.terrain == 'snow':
+                        x.terrain = dic_color[n+1]
+                    #x.printV()
                     file.append(x)
             file.pop(0)
             n += 1
+        '''
 

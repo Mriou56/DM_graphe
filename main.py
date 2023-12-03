@@ -81,24 +81,31 @@ if __name__ == "__main__":
     graphe_grid = GraphList(False)
     for i in range(0, 15):
         for j in range(0, 15):
-            t = random.choice(graphe_grid.dict_elem)
-            alt = random.uniform(0.2, 1)
+            #t = random.choice(graphe_grid.dict_elem)
+            #alt = random.uniform(0.2, 1)
+            t = "snow"
+            alt = 1
             graphe_grid.add_vertex((i, j), t, alt)
+            if i == 5 and j == 5:
+                v1 = Vertex((i,j), 'path', 1)
 
+
+    graphe_grid.zone(v1, 3)
     for v in graphe_grid.vertex():
         # MODIFICATION DE LA COULEUR D'UNE CASE
         hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
         hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
+
         list_neighbour = graphe_grid.get_neighbour(v.coord[0], v.coord[1])
+
         for n in list_neighbour:
             graphe_grid.add_edge(v, n)
-
 
     # AFFICHAGE DE LA GRILLE
     # alias permet de renommer les noms de la légende pour des couleurs spécifiques.
     # debug_coords permet de modifier l'affichage des coordonnées sur les cases.
     hex_grid.show(alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
-                         "red": "fire", "black": "obsidian"}, debug_coords=False)
+                         "red": "fire", "black": "obsidian"}, debug_coords=True)
 
 # # Quel algorithme utiliser pour générer une zone régulière qui s'étend sur la carte (i.e. toutes les cases à
 # distance $i$ d'une case)?
