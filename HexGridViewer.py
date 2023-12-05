@@ -11,6 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from Forme import *
+from Vertex import *
 
 Coords = Tuple[int, int]  # un simple alias de typage python
 
@@ -49,6 +50,7 @@ class HexGridViewer:
         self.__symbols: Dict[Coords, Forme | None] = defaultdict(lambda: None)
         # liste de liens à affichager entre les cases.
         self.__links: List[Tuple[Coords, Coords, str, int]] = []
+
 
     def get_width(self) -> int:
         return self.__width

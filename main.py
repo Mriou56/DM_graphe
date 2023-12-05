@@ -25,13 +25,13 @@ if __name__ == "__main__":
     # CREATION D'UNE GRILLE 15x15
     hex_grid = HexGridViewer(15, 15)
 
-    # question_1(hex_grid)
+    question_1(hex_grid)
 
 
     ## Quel algorithme utiliser pour générer une zone régulière qui s'étend sur la carte (i.e. toutes les cases à
     # distance $i$ d'une case)?
 
-    question_zone(hex_grid)
+    #question_zone(hex_grid)
 
     ## Quel algorithme permettrait de tracer des rivières à partir d'un point donné sur la carte, en ajoutant une
     # contrainte d'altitude descendante en prenannt le chemin le plus long possible ?
