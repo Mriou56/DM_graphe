@@ -73,7 +73,7 @@ class GraphList(Graph):
     def succ(self, vertex: Vertex):
         """ If a graph is directed
             Return a list of all the successor of a vertex"""
-        return self.graph_dict[vertex.coord]
+        return self.graph_dict[vertex]
 
     def cycled(self, ver: Vertex):
         """
@@ -164,6 +164,8 @@ class GraphList(Graph):
     def get_vertetx(self, x, y):
         """
         Get the corresponding vertex of the graph
+        :param x: The abscissa coordinate
+        :param y: The ordinate coordinate
         :return:
         """
         list_V = self.vertex()
@@ -235,4 +237,40 @@ class GraphList(Graph):
             file.pop(0)
             n += 1
         '''
+    def rivière(self, vert: Vertex):
+        """
+        Create a river from a vertex
+        :param vert: The vertex of the beginning
+        :return:
+        """
+        parcours = [vert]
+
+        def DFSinner(ver):
+            ver.terrain = "royalblue"
+            min = []
+            min_max = 0
+            max = None
+            for t in self.succ(ver):
+                if t.altitude < ver.altitude:
+                    min.append(t)
+                    DFSinner(t)
+
+            for i in min:
+                if i.altitude > min_max:
+                    min_max = i.altitude
+                    max = i
+
+            if max != None:
+                parcours.append(max)
+
+        if vert is not None:
+            DFSinner(vert)
+        else:
+            for v in self.vertex():
+                if v.terrain == "snow":
+                    DFSinner(v)
+        print(parcours)
+        for v in parcours:
+            v.terrain = 'royalblue'
+
 
