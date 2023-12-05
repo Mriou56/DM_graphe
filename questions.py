@@ -77,7 +77,7 @@ def question_1(hex_grid: HexGridViewer):
     # debug_coords permet de modifier l'affichage des coordonnées sur les cases.
     hex_grid.show(
         alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
-               "red": "fire", "black": "obsidian"}, show_altitude=False, debug_coords=True)
+               "red": "fire", "black": "obsidian"}, show_altitude=True, debug_coords=False)
 
 def question_zone(hex_grid: HexGridViewer):
     """

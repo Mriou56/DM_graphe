@@ -93,7 +93,7 @@ class HexGridViewer:
     def show(self, alias: Dict[str, str] = None, show_altitude:bool = False, debug_coords:bool = False) -> None:
         """
         Permet d'afficher via matplotlib la grille hexagonale.
-        :param show_altitude:
+        :param show_altitude: Affiche l'altitude de notre sommet
         :param alias: dictionnaire qui permet de modifier le label d'une couleur. Ex: {"white": "snow"}
         :param debug_coords: booléen pour afficher les coordonnées des cases. Attention, le texte est succeptible de plus
          ou moins bien s'afficher en fonction de la taille de la fenêtre matplotlib et des dimensions de la grille.
