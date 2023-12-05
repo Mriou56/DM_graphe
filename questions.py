@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import random
+
 from Graph_List import *
 
 from HexGridViewer import *
@@ -62,13 +64,13 @@ def question_1(hex_grid: HexGridViewer):
     for i in range(0, 15):
         for j in range(0, 15):
             t = random.choice(graphe_grid.dict_elem)
-            alt = random.uniform(0.2, 1)
+            alt = random.randrange(2, 10)
             graphe_grid.add_vertex((i, j), t, alt)
 
     for v in graphe_grid.vertex():
         # MODIFICATION DE LA COULEUR D'UNE CASE
         hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
-        hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
+        hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude/10)
 
     # AFFICHAGE DE LA GRILLE
     # alias permet de renommer les noms de la légende pour des couleurs spécifiques.

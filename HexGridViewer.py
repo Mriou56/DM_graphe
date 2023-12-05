@@ -88,13 +88,14 @@ class HexGridViewer:
             res = [(x + dx, y + dy) for dx, dy in ((1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1))]
         return [(dx, dy) for dx, dy in res if 0 <= dx < self.__width and 0 <= dy < self.__height]
 
-    def show(self, alias: Dict[str, str] = None, show_altitude:bool = False, debug_coords: bool = False) -> None:
+    def show(self, alias: Dict[str, str] = None, show_altitude:bool = False, debug_coords:bool = False) -> None:
         """
         Permet d'afficher via matplotlib la grille hexagonale.
-        :param show_altitude: if debug_coords == true then the altitude won't be showed (same if the value is True)
+        :param show_altitude:
         :param alias: dictionnaire qui permet de modifier le label d'une couleur. Ex: {"white": "snow"}
         :param debug_coords: booléen pour afficher les coordonnées des cases. Attention, le texte est succeptible de plus
          ou moins bien s'afficher en fonction de la taille de la fenêtre matplotlib et des dimensions de la grille.
+         if debug_coords == true then the altitude won't be showed (same if the value is True)
         """
         if alias is None:
             alias = {}
@@ -120,10 +121,12 @@ class HexGridViewer:
 
                 # Ajoute du texte à l'hexagone soit les coordonnées
                 if debug_coords:
+                    # Ajoute du texte à l'hexagone soit les coordonnées
                     text = f"({row}, {col})"  # Le texte que vous voulez afficher
                     ax.annotate(text, xy=center, ha='center', va='center', fontsize=8, color='black')
                 else:
                     if show_altitude:
+                        #alpha = altitude of Vertex
                         text_altitude = f"({self.__alpha[(row, col)]})"
                         ax.annotate(text_altitude, xy=center, ha='center', va='center', fontsize=8, color='black')
 
