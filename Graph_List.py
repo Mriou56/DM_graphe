@@ -200,9 +200,6 @@ class GraphList(Graph):
 
 
 
-
-
-
         '''
         Ton code, je teste autre chose, ca marche pas bien j'ai une grille toute rouge
         n = 0
