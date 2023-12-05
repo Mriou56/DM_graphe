@@ -194,12 +194,6 @@ class GraphList(Graph):
         :return: zone of neighboor
         """
 
-
-
-
-
-
-        '''
         n = 0
         v.terrain = 'black'
         dic_color = {0: "black", 1: "red", 2: "orange", 3: "yellow", 4: "pink", 5:'purple'}
@@ -221,7 +215,7 @@ class GraphList(Graph):
                 color_n(self.get_neighbour(next.coord[0], next.coord[1]), dic_color[n+1])
                 neighbour.pop(0)
 
-
+        '''
         Ton code, je teste autre chose, ca marche pas bien j'ai une grille toute rouge
         n = 0
         list_neighboor = [v]
