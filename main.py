@@ -27,7 +27,6 @@ if __name__ == "__main__":
 
     # question_1(hex_grid)
 
-
     ## Quel algorithme utiliser pour générer une zone régulière qui s'étend sur la carte (i.e. toutes les cases à
     # distance $i$ d'une case)?
 

@@ -260,6 +260,7 @@ class GraphList(Graph):
                     min_max = i.altitude
                     max = i
 
+
             if max != None:
                 parcours.append(max)
 

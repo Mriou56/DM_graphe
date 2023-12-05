@@ -142,6 +142,7 @@ def question_river(hex_grid: HexGridViewer):
 
 
 
+
     hex_grid.show(
         alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
                "red": "fire", "black": "obsidian"}, show_altitude=False, debug_coords=True)
