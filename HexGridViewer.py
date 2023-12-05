@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 
 from Forme import *
 
-
 Coords = Tuple[int, int]  # un simple alias de typage python
 
 
@@ -120,6 +119,7 @@ class HexGridViewer:
                 hexagon.set_facecolor(self.__colors[(row, col)])
                 hexagon.set_alpha(self.__alpha[(row, col)])
 
+                # Ajoute du texte à l'hexagone soit les coordonnées
                 if debug_coords:
                     # Ajoute du texte à l'hexagone soit les coordonnées
                     text = f"({row}, {col})"  # Le texte que vous voulez afficher

@@ -180,6 +180,13 @@ class GraphList(Graph):
         :param v: the center vertex
         :return: zone of neighboor
         """
+
+
+
+
+
+
+        '''
         n = 0
         v.terrain = 'black'
         dic_color = {0: "black", 1: "red", 2: "orange", 3: "yellow", 4: "pink", 5:'purple'}
@@ -202,11 +209,6 @@ class GraphList(Graph):
                 neighbour.pop(0)
 
 
-
-
-
-
-        '''
         Ton code, je teste autre chose, ca marche pas bien j'ai une grille toute rouge
         n = 0
         list_neighboor = [v]
