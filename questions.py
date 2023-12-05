@@ -68,6 +68,11 @@ def question_1(hex_grid: HexGridViewer):
             graphe_grid.add_vertex((i, j), t, alt)
 
     for v in graphe_grid.vertex():
+        # ADD EDGES BETWEEN VERTEX
+        list = graphe_grid.get_neighbour(v.coord[0], v.coord[1])
+        for v2 in list:
+            graphe_grid.add_edge(v, v2)
+
         # MODIFICATION DE LA COULEUR D'UNE CASE
         hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
         hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude/10)
@@ -100,6 +105,43 @@ def question_zone(hex_grid: HexGridViewer):
         # MODIFICATION DE LA COULEUR D'UNE CASE
         hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
         hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
+
+    hex_grid.show(
+        alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
+               "red": "fire", "black": "obsidian"}, show_altitude=False, debug_coords=True)
+
+def question_river(hex_grid: HexGridViewer):
+    """
+    Test for the creation of a river
+    :param hex_grid:
+    :return:
+    """
+    # CREATION D'UN GRAPHE
+    graphe_grid = GraphList(False)
+    for i in range(0, 15):
+        for j in range(0, 15):
+            t = 'snow'
+            alt = random.uniform(0.2, 1)
+            graphe_grid.add_vertex((i, j), t, alt)
+
+    vert = graphe_grid.get_vertetx(4, 8 )
+    vert.altitude = 1
+
+    for v in graphe_grid.vertex():
+        # ADD EDGES BETWEEN VERTEX
+        list = graphe_grid.get_neighbour(v.coord[0], v.coord[1])
+        for v2 in list:
+            graphe_grid.add_edge(v, v2)
+
+    graphe_grid.rivière(vert)
+
+    for v in graphe_grid.vertex():
+        # MODIFICATION DE LA COULEUR D'UNE CASE
+        hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
+        hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
+
+
+
 
     hex_grid.show(
         alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",

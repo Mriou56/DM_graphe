@@ -73,7 +73,7 @@ class GraphList(Graph):
     def succ(self, vertex: Vertex):
         """ If a graph is directed
             Return a list of all the successor of a vertex"""
-        return self.graph_dict[vertex.coord]
+        return self.graph_dict[vertex]
 
     def cycled(self, ver: Vertex):
         """
