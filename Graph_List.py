@@ -123,6 +123,7 @@ class GraphList(Graph):
             if not self.directed:
                 self.graph_dict[vertex2.coord].remove(vertex1.coord)
 
+
     def get_weight(self, vertex1: Vertex, vertex2: Vertex):
         """
         Get the weight of an edge
@@ -160,6 +161,18 @@ class GraphList(Graph):
 
         return list_v
 
+    def get_vertetx(self, x, y):
+        """
+        Get the corresponding vertex of the graph
+        :return:
+        """
+        list_V = self.vertex()
+        v_final = None
+        for vert in list_V:
+            if vert.coord[0] == x and vert.coord[1] == y:
+                v_final = vert
+
+        return v_final
     def find_higher(self):
         """
         Get the higher vertex of the graph

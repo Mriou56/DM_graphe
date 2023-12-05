@@ -11,8 +11,6 @@ Contact: sebastien.gamblin@isen-ouest.yncrea.fr
 
 from __future__ import annotations
 
-
-
 from questions import *
 
 

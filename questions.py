@@ -75,4 +75,31 @@ def question_1(hex_grid: HexGridViewer):
     # debug_coords permet de modifier l'affichage des coordonnées sur les cases.
     hex_grid.show(
         alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
-               "red": "fire", "black": "obsidian"}, show_altitude=True, debug_coords=False)
+               "red": "fire", "black": "obsidian"}, show_altitude=False, debug_coords=True)
+
+def question_zone(hex_grid: HexGridViewer):
+    """
+    Function to create a zone around a vertex
+    :param hex_grid: a grid
+    :return:
+    """
+    # CREATION D'UN GRAPHE
+    graphe_grid = GraphList(False)
+    for i in range(0, 15):
+        for j in range(0, 15):
+            t = random.choice(graphe_grid.dict_elem)
+            alt = random.uniform(0.2, 1)
+            graphe_grid.add_vertex((i, j), t, alt)
+
+    v = graphe_grid.get_vertetx(5,5)
+    graphe_grid.zone(v)
+
+    for v in graphe_grid.vertex():
+        # MODIFICATION DE LA COULEUR D'UNE CASE
+        hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
+        hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
+
+    hex_grid.show(
+        alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
+               "red": "fire", "black": "obsidian"}, show_altitude=False, debug_coords=True)
+
