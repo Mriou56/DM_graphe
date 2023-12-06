@@ -113,7 +113,7 @@ def question_zone(hex_grid: HexGridViewer):
 def question_river(hex_grid: HexGridViewer):
     """
     Test for the creation of a river
-    :param hex_grid:
+    :param hex_grid: the grid to show
     :return:
     """
     # CREATION D'UN GRAPHE
@@ -151,7 +151,51 @@ def question_river(hex_grid: HexGridViewer):
         hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
 
 
+    hex_grid.show(
+        alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
+               "red": "fire", "black": "obsidian"}, show_altitude=False, debug_coords=True)
 
+def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
+    """
+    Create a coherent card
+    :param hex_grid: the grid to show
+    :return:
+    """
+    # Creation of a graph
+    graphe_grid = GraphList(False)
+    for i in range(0, 15):
+        for j in range(0, 15):
+            t = 'forestgreen'
+            alt = 1 # Voir comment gérer les altitudes pour que se soit beau
+            graphe_grid.add_vertex((i, j), t, alt)
+
+
+    for v in graphe_grid.vertex():
+        # Add edges between vertex of the graph
+        list = graphe_grid.get_neighbour(v.coord[0], v.coord[1])
+        for v2 in list:
+            graphe_grid.add_edge(v, v2)
+
+    # Creation of the rivers
+    for n in range (0, nb_rivers):
+        x = random.randrange(0,15)
+        y = random.randrange(0, 15)
+        v = graphe_grid.get_vertetx(x, y)
+        graphe_grid.rivière(v)
+
+    # Creation of area
+    for n in range (0, nb_zones):
+        x = random.randrange(0, 15)
+        y = random.randrange(0, 15)
+        v = graphe_grid.get_vertetx(x, y)
+        d = random.randrange(2, 6)
+        graphe_grid.zone(v, d)
+
+
+    for v in graphe_grid.vertex():
+        # Modification of the color and the opacity of one cell
+        hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
+        hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
 
     hex_grid.show(
         alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",

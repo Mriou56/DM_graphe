@@ -39,7 +39,13 @@ if __name__ == "__main__":
 
     # question_river(hex_grid)
 
+
+    # Algo pour faire une carte jolie
+
+    carte(hex_grid, 3, 4)
+
     ## Quel algorithme utiliser pour aller d'un point A à un point B ?
+
 
 
     ## Quel algorithme utiliser pour créer un réseau de routes le moins couteux possible entre x villes, pour qu'elles
