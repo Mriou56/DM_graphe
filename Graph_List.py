@@ -188,55 +188,35 @@ class GraphList(Graph):
                 v_max = v
         return v_max
 
-    def zone(self, v: Vertex, dist):
+    def zone(self, centre: Vertex, dist):
         """
         Get the area around a vertex
-        :param dist: dist of the area
-        :param v: the center vertex
+        :type centre: the center vertex
+        :param dist: dist of the are
         :return: zone of neighboor
-        """
+        en partant d'un sommet,
+        on va chercher à implémenter une zone autour de ce sommet.
+        Cette zone sera de rayon dist. (exemple : si je pars du centre, il faut que je parcoure tous les sommets autours
+        du centre puis les sommets autour des sommets du centre, etc).
+       """
+        queue = [(centre, 0)]
+        visited = set()
+        visited.add(centre)
 
-        n = 0
-        v.terrain = 'black'
-        dic_color = {0: "black", 1: "red", 2: "orange", 3: "yellow", 4: "pink", 5:'purple'}
-        neighbour = [v]
+        dic_color = {0: "black", 1: "red", 2: "orange", 3: "yellow", 4: "pink", 5: 'purple'}
 
-        def color_n(voisins, color):
-            for next in voisins:
-                if next.terrain == 'snow':
-                    next.terrain = color
-                    neighbour.append(next)
+        while queue:
+            current_vertex, current_distance = queue.pop(0)
+            current_vertex.terrain = dic_color[current_distance % 6]
 
-        color_n(self.get_neighbour(neighbour[0].coord[0], neighbour[0].coord[1]), dic_color[n+1])
-        while n < dist:
-            n += 1
-            v = self.get_neighbour(neighbour[0].coord[0], neighbour[0].coord[1])
-            print(v)
-            for next in v:
-                print(next.coord)
-                color_n(self.get_neighbour(next.coord[0], next.coord[1]), dic_color[n+1])
-                neighbour.pop(0)
+            if current_distance < dist:
+                neighbors = self.get_neighbour(current_vertex.coord[0], current_vertex.coord[1])
 
-        '''
-        Ton code, je teste autre chose, ca marche pas bien j'ai une grille toute rouge
-        n = 0
-        list_neighboor = [v]
-        dic_color = {0: "black", 1: "red", 2:"orange", 3:"yellow"}
-        file = [v]
-        v.terrain = dic_color[n]
-        while n < dist:
-            for x in self.get_neighbour(file[0].coord[0], file[0].coord[1]):
-                if x in list_neighboor:
-                    pass
-                else:
-                    list_neighboor.append(x)
-                    if x.terrain == 'snow':
-                        x.terrain = dic_color[n+1]
-                    #x.printV()
-                    file.append(x)
-            file.pop(0)
-            n += 1
-        '''
+                for neighbor in neighbors:
+                    if neighbor not in visited:
+                        queue.append((neighbor, current_distance + 1))
+                        visited.add(neighbor)
+
     def rivière(self, vert: Vertex):
         """
         Create a river from a vertex
@@ -268,5 +248,3 @@ class GraphList(Graph):
         print(parcours)
         for v in parcours:
             v.terrain = 'royalblue'
-
-
