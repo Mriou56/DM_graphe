@@ -253,23 +253,18 @@ class GraphList(Graph):
             for t in self.succ(ver):
                 if t.altitude < ver.altitude:
                     min.append(t)
-                    DFSinner(t)
 
             for i in min:
                 if i.altitude > min_max:
                     min_max = i.altitude
                     max = i
 
-
             if max != None:
                 parcours.append(max)
+                DFSinner(max)
 
-        if vert is not None:
-            DFSinner(vert)
-        else:
-            for v in self.vertex():
-                if v.terrain == "snow":
-                    DFSinner(v)
+        DFSinner(vert)
+
         print(parcours)
         for v in parcours:
             v.terrain = 'royalblue'

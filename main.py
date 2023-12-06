@@ -30,14 +30,17 @@ if __name__ == "__main__":
     ## Quel algorithme utiliser pour générer une zone régulière qui s'étend sur la carte (i.e. toutes les cases à
     # distance $i$ d'une case)?
 
-    #question_zone(hex_grid)
+    # question_zone(hex_grid)
 
     ## Quel algorithme permettrait de tracer des rivières à partir d'un point donné sur la carte, en ajoutant une
     # contrainte d'altitude descendante en prenannt le chemin le plus long possible ?
 
-    question_river(hex_grid)
+    '''Le mieux est de s'inspirer du code du DFS'''
+
+    # question_river(hex_grid)
 
     ## Quel algorithme utiliser pour aller d'un point A à un point B ?
+
 
     ## Quel algorithme utiliser pour créer un réseau de routes le moins couteux possible entre x villes, pour qu'elles
     # sont toutes interconnectées ?

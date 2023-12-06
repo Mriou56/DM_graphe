@@ -121,11 +121,21 @@ def question_river(hex_grid: HexGridViewer):
     for i in range(0, 15):
         for j in range(0, 15):
             t = 'snow'
-            alt = random.uniform(0.2, 1)
+            alt = 0.4
             graphe_grid.add_vertex((i, j), t, alt)
 
     vert = graphe_grid.get_vertetx(4, 8 )
+    v1 = graphe_grid.get_vertetx(4,9)
+    v2 = graphe_grid.get_vertetx(5,10)
+    v3 =  graphe_grid.get_vertetx(6,10)
+    v4 = graphe_grid.get_vertetx(7,10)
+
     vert.altitude = 1
+    v1.altitude = 0.9
+    v2.altitude = 0.8
+    v3.altitude = 0.7
+    v4.altitude = 0.6
+
 
     for v in graphe_grid.vertex():
         # ADD EDGES BETWEEN VERTEX
