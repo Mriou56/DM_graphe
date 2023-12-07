@@ -8,6 +8,16 @@ from HexGridViewer import *
 from Cercle import *
 from Rect import *
 
+
+
+## Dictionary for the area
+dict_area = {'ville' : ['dimgray', 'gray', 'darkgray', 'silver', 'darkolivegreen'],
+             'desert' : ['sandybrown', 'peru', 'peachpuff', 'navajowhite', 'papayawhip'],
+             'foret' : ['darkgreen', 'forestgreen', 'green', 'mediumseagreen', 'palegreen'],
+             'montagne' : ['snow', 'linen', 'saddlebrown', 'sienna', 'darkkhaki'],
+             'volcan' : ['red', 'orangered', 'darkred', 'saddlebrown', 'black'],
+             'neige' : ['snow', 'aliceblue', 'whitesmoke', 'floralwhite', 'snow']}
+
 def test():
     """
     Fonction exemple pour présenter le programme ci-dessus.
