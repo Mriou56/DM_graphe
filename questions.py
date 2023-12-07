@@ -9,16 +9,6 @@ from Cercle import *
 from Rect import *
 
 
-
-## Dictionary for the area
-dict_area = {'ville' : {0: 'dimgray', 1: 'gray', 2: 'darkgray', 3: 'silver', 4: 'darkolivegreen'},
-             'desert' : {0: 'sandybrown', 1: 'peru', 2:'peachpuff', 3:'navajowhite', 4:'papayawhip'},
-             'foret' : {0:'darkgreen', 1:'forestgreen', 2:'green', 3:'mediumseagreen', 4:'palegreen'},
-             'montagne' : {0:'snow', 1:'linen', 2:'saddlebrown', 3:'sienna', 4:'darkkhaki'},
-             'volcan' : {0:'red', 1:'orangered', 2:'darkred', 3:'saddlebrown', 4:'black'},
-             'neige' : {0:'snow', 1:'aliceblue', 2:'whitesmoke', 3:'floralwhite', 4:'snow'},
-             'lagon' : {0:'lightseagreen', 1:'mediumturquoise', 2:'turquoise', 3:'aquamarine', 4:'aquamarine'}}
-
 def test():
     """
     Fonction exemple pour présenter le programme ci-dessus.
@@ -176,10 +166,9 @@ def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
     graphe_grid = GraphList(False)
     for i in range(0, hex_grid.get_width()):
         for j in range(0, hex_grid.get_height()):
-            t = 'forestgreen'
-            alt = 1 # Voir comment gérer les altitudes pour que se soit beau
+            t = 'green'
+            alt = random.uniform(0.2, 0.5)
             graphe_grid.add_vertex((i, j), t, alt)
-
 
     for v in graphe_grid.vertex():
         # Add edges between vertex of the graph
@@ -187,12 +176,16 @@ def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
         for v2 in list:
             graphe_grid.add_edge(v, v2)
 
-    # Creation of the rivers
-    for n in range (0, nb_rivers):
-        x = random.randrange(0,hex_grid.get_width())
-        y = random.randrange(0, hex_grid.get_height())
-        v = graphe_grid.get_vertetx(x, y)
-        graphe_grid.rivière(v)
+    # Modification for a logical altitude
+    '''list_N = graphe_grid.get_neighbour(i, j)
+    a = 0
+    if len(list_N) > 1:
+        for n in list_N:
+            a += n.altitude
+        v = graphe_grid.get_vertetx(i, j)
+        v.altitude = a / len(list_N)
+        print(v.altitude)'''
+
 
     # Creation of area
     for n in range (0, nb_zones):
@@ -201,8 +194,14 @@ def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
         v = graphe_grid.get_vertetx(x, y)
         d = random.randrange(1, 5)
         biome = random.choice(tuple(dict_area.keys()))
-        print(biome)
-        graphe_grid.zone(v, d, dict_area[biome])
+        graphe_grid.zone2(v, d, dict_area[biome])
+
+    # Creation of the rivers
+    for n in range(0, nb_rivers):
+        x = random.randrange(0, hex_grid.get_width())
+        y = random.randrange(0, hex_grid.get_height())
+        v = graphe_grid.get_vertetx(x, y)
+        graphe_grid.rivière(v)
 
 
     for v in graphe_grid.vertex():

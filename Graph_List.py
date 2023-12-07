@@ -6,6 +6,14 @@ from HexGridViewer import *
 import random
 
 
+## Dictionary for the area
+dict_area = {'ville' : {0: 'dimgray', 1: 'gray', 2: 'darkgray', 3: 'silver', 4: 'darkolivegreen'},
+             'desert' : {0: 'sandybrown', 1: 'peru', 2:'peachpuff', 3:'navajowhite', 4:'papayawhip'},
+             'foret' : {0:'darkgreen', 1:'forestgreen', 2:'green', 3:'mediumseagreen', 4:'palegreen'},
+             'montagne' : {0:'snow', 1:'linen', 2:'saddlebrown', 3:'sienna', 4:'darkkhaki'},
+             'volcan' : {0:'red', 1:'orangered', 2:'darkred', 3:'saddlebrown', 4:'black'},
+             'lagon' : {0:'lightseagreen', 1:'mediumturquoise', 2:'turquoise', 3:'aquamarine', 4:'aquamarine'}}
+
 class GraphList(Graph):
 
     def __init__(self, directed):
@@ -215,6 +223,62 @@ class GraphList(Graph):
                         queue.append((neighbor, current_distance + 1))
                         visited.add(neighbor)
 
+    def zone2(self, centre: Vertex, dist, dico: dict):
+        """
+        Get the area around a vertex
+        :type centre: the center vertex
+        :param dist: dist of the area
+        :param dico: the dictionary of the corresponding area
+        :return: zone of neighbor
+        en partant d'un sommet,
+        on va chercher à implémenter une zone autour de ce sommet.
+        Cette zone sera de rayon dist. (exemple : si je pars du centre, il faut que je parcoure tous les sommets autours
+        du centre puis les sommets autour des sommets du centre, etc).
+       """
+        queue = [(centre, 0)]
+        visited = set()
+        visited.add(centre)
+
+        while queue:
+            current_vertex, current_distance = queue.pop(0)
+            current_vertex.terrain = dico[current_distance % 6]
+            if dico == dict_area['ville']:
+                current_vertex.altitude = random.uniform(0.3, 0.6)
+            if dico == dict_area['foret']:
+                current_vertex.altitude = random.uniform(0.3, 0.6)
+            if dico == dict_area['montagne']:
+                current_vertex.altitude = random.uniform(0.8, 1)
+            if dico == dict_area['desert']:
+                current_vertex.altitude = random.uniform(0.4, 0.6)
+            if dico == dict_area['volcan']:
+                current_vertex.altitude = random.uniform(0.8, 1)
+            if dico == dict_area['lagon']:
+                current_vertex.altitude = random.uniform(0.1, 0.3)
+
+            if current_distance < dist:
+                neighbors = self.get_neighbour(current_vertex.coord[0], current_vertex.coord[1])
+
+                for neighbor in neighbors:
+                    if neighbor not in visited:
+                        queue.append((neighbor, current_distance + 1))
+                        visited.add(neighbor)
+                        if dico == dict_area['foret'] or dico == dict_area['desert'] or dico == dict_area['ville']:
+                            x = current_vertex.altitude - 0.2
+                            y = current_vertex.altitude + 0.2
+                            neighbor.altitude = random.uniform(x, y)
+                        if dico == dict_area['montagne'] or dico == dict_area['volcan']:
+                            x = current_vertex.altitude - 0.1
+                            y = current_vertex.altitude + 0.1
+                            neighbor.altitude = random.uniform(x, y)
+                        if dico == dict_area['lagon']:
+                            current_vertex.altitude = random.uniform(0.1, 0.3)
+                            neighbor.altitude = random.uniform(0.1, 0.3)
+
+                        if neighbor.altitude >= 1:
+                            neighbor.altitude = 1
+                        if neighbor.altitude <= 0.1:
+                            neighbor.altitude = 0.1
+
     def rivière(self, vert: Vertex):
         """
         Create a river from a vertex
@@ -242,7 +306,5 @@ class GraphList(Graph):
                 DFSinner(max)
 
         DFSinner(vert)
-
-        print(parcours)
         for v in parcours:
             v.terrain = 'royalblue'
