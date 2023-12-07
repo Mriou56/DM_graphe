@@ -23,7 +23,7 @@ if __name__ == "__main__":
     # main()
 
     # CREATION D'UNE GRILLE 15x15
-    hex_grid = HexGridViewer(15, 15)
+    hex_grid = HexGridViewer(50, 50)
 
     # question_1(hex_grid)
 
@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     # Algo pour faire une carte jolie
 
-    carte(hex_grid, 3, 4)
+    carte(hex_grid, 6, 15)
 
     ## Quel algorithme utiliser pour aller d'un point A à un point B ?
 

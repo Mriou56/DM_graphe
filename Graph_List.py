@@ -187,12 +187,13 @@ class GraphList(Graph):
                 v_max = v
         return v_max
 
-    def zone(self, centre: Vertex, dist):
+    def zone(self, centre: Vertex, dist, dico: dict):
         """
         Get the area around a vertex
         :type centre: the center vertex
-        :param dist: dist of the are
-        :return: zone of neighboor
+        :param dist: dist of the area
+        :param dico: the dictionary of the corresponding area
+        :return: zone of neighbor
         en partant d'un sommet,
         on va chercher à implémenter une zone autour de ce sommet.
         Cette zone sera de rayon dist. (exemple : si je pars du centre, il faut que je parcoure tous les sommets autours
@@ -202,11 +203,9 @@ class GraphList(Graph):
         visited = set()
         visited.add(centre)
 
-        dic_color = {0: "black", 1: "red", 2: "orange", 3: "yellow", 4: "pink", 5: 'purple'}
-
         while queue:
             current_vertex, current_distance = queue.pop(0)
-            current_vertex.terrain = dic_color[current_distance % 6]
+            current_vertex.terrain = dico[current_distance % 6]
 
             if current_distance < dist:
                 neighbors = self.get_neighbour(current_vertex.coord[0], current_vertex.coord[1])

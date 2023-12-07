@@ -11,12 +11,13 @@ from Rect import *
 
 
 ## Dictionary for the area
-dict_area = {'ville' : ['dimgray', 'gray', 'darkgray', 'silver', 'darkolivegreen'],
-             'desert' : ['sandybrown', 'peru', 'peachpuff', 'navajowhite', 'papayawhip'],
-             'foret' : ['darkgreen', 'forestgreen', 'green', 'mediumseagreen', 'palegreen'],
-             'montagne' : ['snow', 'linen', 'saddlebrown', 'sienna', 'darkkhaki'],
-             'volcan' : ['red', 'orangered', 'darkred', 'saddlebrown', 'black'],
-             'neige' : ['snow', 'aliceblue', 'whitesmoke', 'floralwhite', 'snow']}
+dict_area = {'ville' : {0: 'dimgray', 1: 'gray', 2: 'darkgray', 3: 'silver', 4: 'darkolivegreen'},
+             'desert' : {0: 'sandybrown', 1: 'peru', 2:'peachpuff', 3:'navajowhite', 4:'papayawhip'},
+             'foret' : {0:'darkgreen', 1:'forestgreen', 2:'green', 3:'mediumseagreen', 4:'palegreen'},
+             'montagne' : {0:'snow', 1:'linen', 2:'saddlebrown', 3:'sienna', 4:'darkkhaki'},
+             'volcan' : {0:'red', 1:'orangered', 2:'darkred', 3:'saddlebrown', 4:'black'},
+             'neige' : {0:'snow', 1:'aliceblue', 2:'whitesmoke', 3:'floralwhite', 4:'snow'},
+             'lagon' : {0:'lightseagreen', 1:'mediumturquoise', 2:'turquoise', 3:'aquamarine', 4:'aquamarine'}}
 
 def test():
     """
@@ -71,8 +72,8 @@ def question_1(hex_grid: HexGridViewer):
     """
     # CREATION D'UN GRAPHE
     graphe_grid = GraphList(False)
-    for i in range(0, 15):
-        for j in range(0, 15):
+    for i in range(0, hex_grid.get_width()):
+        for j in range(0, hex_grid.get_height()):
             t = random.choice(graphe_grid.dict_elem)
             alt = random.randrange(2, 10)
             graphe_grid.add_vertex((i, j), t, alt)
@@ -102,14 +103,14 @@ def question_zone(hex_grid: HexGridViewer):
     """
     # CREATION D'UN GRAPHE
     graphe_grid = GraphList(False)
-    for i in range(0, 15):
-        for j in range(0, 15):
+    for i in range(0, hex_grid.get_width()):
+        for j in range(0, hex_grid.get_height()):
             t = 'snow'
             alt = 1
             graphe_grid.add_vertex((i, j), t, alt)
 
     v = graphe_grid.get_vertetx(5,5)
-    graphe_grid.zone(v, 4)
+    graphe_grid.zone(v, 4, dict_area['foret'])
 
     for v in graphe_grid.vertex():
         # MODIFICATION DE LA COULEUR D'UNE CASE
@@ -128,8 +129,8 @@ def question_river(hex_grid: HexGridViewer):
     """
     # CREATION D'UN GRAPHE
     graphe_grid = GraphList(False)
-    for i in range(0, 15):
-        for j in range(0, 15):
+    for i in range(0, hex_grid.get_width()):
+        for j in range(0, hex_grid.get_height()):
             t = 'snow'
             alt = 0.4
             graphe_grid.add_vertex((i, j), t, alt)
@@ -173,8 +174,8 @@ def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
     """
     # Creation of a graph
     graphe_grid = GraphList(False)
-    for i in range(0, 15):
-        for j in range(0, 15):
+    for i in range(0, hex_grid.get_width()):
+        for j in range(0, hex_grid.get_height()):
             t = 'forestgreen'
             alt = 1 # Voir comment gérer les altitudes pour que se soit beau
             graphe_grid.add_vertex((i, j), t, alt)
@@ -188,18 +189,20 @@ def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
 
     # Creation of the rivers
     for n in range (0, nb_rivers):
-        x = random.randrange(0,15)
-        y = random.randrange(0, 15)
+        x = random.randrange(0,hex_grid.get_width())
+        y = random.randrange(0, hex_grid.get_height())
         v = graphe_grid.get_vertetx(x, y)
         graphe_grid.rivière(v)
 
     # Creation of area
     for n in range (0, nb_zones):
-        x = random.randrange(0, 15)
-        y = random.randrange(0, 15)
+        x = random.randrange(0, hex_grid.get_width())
+        y = random.randrange(0, hex_grid.get_width())
         v = graphe_grid.get_vertetx(x, y)
-        d = random.randrange(2, 6)
-        graphe_grid.zone(v, d)
+        d = random.randrange(1, 5)
+        biome = random.choice(tuple(dict_area.keys()))
+        print(biome)
+        graphe_grid.zone(v, d, dict_area[biome])
 
 
     for v in graphe_grid.vertex():
@@ -209,5 +212,5 @@ def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
 
     hex_grid.show(
         alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
-               "red": "fire", "black": "obsidian"}, show_altitude=False, debug_coords=True)
+               "red": "fire", "black": "obsidian"}, show_altitude=False, debug_coords=False)
 
