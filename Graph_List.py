@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from Graph import *
 from Vertex import *
 from HexGridViewer import *
+from Cercle import *
 import random
 
 ## Dictionary for the area
@@ -287,19 +288,16 @@ class GraphList(Graph):
         visited = set()
         visited.add(centre)
 
+
         while queue:
             current_vertex, current_distance = queue.pop(0)
             current_vertex.terrain = dico[current_distance % 6]
-            if dico == dict_area['ville']:
+            if dico == dict_area['ville'] or dico == dict_area['foret']:
                 current_vertex.altitude = random.uniform(0.3, 0.6)
-            if dico == dict_area['foret']:
-                current_vertex.altitude = random.uniform(0.3, 0.6)
-            if dico == dict_area['montagne']:
+            if dico == dict_area['montagne'] or dico == dict_area['volcan']:
                 current_vertex.altitude = random.uniform(0.8, 1)
             if dico == dict_area['desert']:
                 current_vertex.altitude = random.uniform(0.4, 0.6)
-            if dico == dict_area['volcan']:
-                current_vertex.altitude = random.uniform(0.8, 1)
             if dico == dict_area['lagon']:
                 current_vertex.altitude = random.uniform(0.1, 0.3)
 
@@ -322,6 +320,7 @@ class GraphList(Graph):
                             current_vertex.altitude = random.uniform(0.1, 0.3)
                             neighbor.altitude = random.uniform(0.1, 0.3)
 
+                        # Test if the altitude of the vertex is between 0 and 1
                         if neighbor.altitude >= 1:
                             neighbor.altitude = 1
                         if neighbor.altitude <= 0.1:
