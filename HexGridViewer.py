@@ -51,7 +51,6 @@ class HexGridViewer:
         # liste de liens à affichager entre les cases.
         self.__links: List[Tuple[Coords, Coords, str, int]] = []
 
-
     def get_width(self) -> int:
         return self.__width
 
@@ -63,10 +62,20 @@ class HexGridViewer:
             f"self.__colors type must be in matplotlib colors. What is {self.__colors[(x, y)]} ?"
         self.__colors[(x, y)] = color
 
+    def add_color(self, v: Vertex) -> None:
+        assert self.__colors[v.coord] in mcolors.CSS4_COLORS, \
+            f"self.__colors type must be in matplotlib colors. What is {self.__colors[v.coord]} ?"
+        self.__colors[v.coord] = v.terrain
+
     def add_alpha(self, x: int, y: int, alpha: float) -> None:
         assert 0 <= self.__alpha[
             (x, y)] <= 1, f"alpha value must be between 0 and 1. What is {self.__alpha[(x, y)]} ?"
         self.__alpha[(x, y)] = alpha
+
+    def add_alpha(self, v: Vertex) -> None:
+        assert 0 <= self.__alpha[
+            v.coord] <= 1, f"alpha value must be between 0 and 1. What is {self.__alpha[v.coord]} ?"
+        self.__alpha[v.coord] = v.altitude
 
     def add_symbol(self, x: int, y: int, symbol: Forme) -> None:
         self.__symbols[(x, y)] = symbol
@@ -90,9 +99,11 @@ class HexGridViewer:
             res = [(x + dx, y + dy) for dx, dy in ((1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1))]
         return [(dx, dy) for dx, dy in res if 0 <= dx < self.__width and 0 <= dy < self.__height]
 
-    def show(self, alias: Dict[str, str] = None, show_altitude:bool = False, debug_coords:bool = False) -> None:
+    def show(self, alias: Dict[str, str] = None, value_edgecolor="none", show_altitude: bool = False,
+             debug_coords: bool = False) -> None:
         """
         Permet d'afficher via matplotlib la grille hexagonale.
+        :param value_edgecolor: define color of the edge
         :param show_altitude: Affiche l'altitude de notre sommet
         :param alias: dictionnaire qui permet de modifier le label d'une couleur. Ex: {"white": "snow"}
         :param debug_coords: booléen pour afficher les coordonnées des cases. Attention, le texte est succeptible de plus
@@ -116,8 +127,9 @@ class HexGridViewer:
                 coords[(row, col)] = (x, y)
 
                 center = (x, y)
+                # hexagon = RegularPolygon(center, numVertices=6, radius=h, orientation=np.pi / 6, edgecolor="black")
                 hexagon = RegularPolygon(center, numVertices=6, radius=h, orientation=np.pi / 6,
-                                         edgecolor="black")
+                                         edgecolor=value_edgecolor)
                 hexagon.set_facecolor(self.__colors[(row, col)])
                 hexagon.set_alpha(self.__alpha[(row, col)])
 
@@ -128,9 +140,11 @@ class HexGridViewer:
                     ax.annotate(text, xy=center, ha='center', va='center', fontsize=8, color='black')
                 else:
                     if show_altitude:
-                        #alpha = altitude of Vertex
-                        text_altitude = f"({self.__alpha[(row, col)]})"
-                        ax.annotate(text_altitude, xy=center, ha='center', va='center', fontsize=8, color='black')
+                        # alpha = altitude of Vertex
+                        # *10 to improve the visibility of altitude in the graph
+                       # text_altitude = f"{int(self.__alpha[(row, col)] * 10)}"
+                        text_altitude = f"{float(self.__alpha[(row, col)] )}"
+                        ax.annotate(text_altitude, xy=center, ha='center', va='center', fontsize=6, color='black')
 
                 # ajoute l'hexagone
                 ax.add_patch(hexagon)

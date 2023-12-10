@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import random
-
 from Graph_List import *
 
 from HexGridViewer import *
@@ -65,18 +63,18 @@ def question_1(hex_grid: HexGridViewer):
     for i in range(0, hex_grid.get_width()):
         for j in range(0, hex_grid.get_height()):
             t = random.choice(graphe_grid.dict_elem)
-            alt = random.randrange(2, 10)
+            alt = random.uniform(0.2, 1)
             graphe_grid.add_vertex((i, j), t, alt)
 
     for v in graphe_grid.vertex():
         # ADD EDGES BETWEEN VERTEX
-        list = graphe_grid.get_neighbour(v.coord[0], v.coord[1])
+        list = graphe_grid.get_neighbour(v)
         for v2 in list:
             graphe_grid.add_edge(v, v2)
 
         # MODIFICATION DE LA COULEUR D'UNE CASE
-        hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
-        hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude/10)
+        hex_grid.add_color(v)
+        hex_grid.add_alpha(v)
 
     # AFFICHAGE DE LA GRILLE
     # alias permet de renommer les noms de la légende pour des couleurs spécifiques.
@@ -84,6 +82,7 @@ def question_1(hex_grid: HexGridViewer):
     hex_grid.show(
         alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
                "red": "fire", "black": "obsidian"}, show_altitude=True, debug_coords=False)
+
 
 def question_zone(hex_grid: HexGridViewer):
     """
@@ -99,17 +98,18 @@ def question_zone(hex_grid: HexGridViewer):
             alt = 1
             graphe_grid.add_vertex((i, j), t, alt)
 
-    v = graphe_grid.get_vertetx(5,5)
+    v = graphe_grid.get_vertetx(5, 5)
     graphe_grid.zone(v, 4, dict_area['foret'])
 
     for v in graphe_grid.vertex():
         # MODIFICATION DE LA COULEUR D'UNE CASE
-        hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
-        hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
+        hex_grid.add_color(v)
+        hex_grid.add_alpha(v)
 
     hex_grid.show(
         alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
-               "red": "fire", "black": "obsidian"}, show_altitude=False, debug_coords=True)
+               "red": "fire", "black": "obsidian"}, value_edgecolor="black", show_altitude=False, debug_coords=False)
+
 
 def question_river(hex_grid: HexGridViewer):
     """
@@ -122,9 +122,14 @@ def question_river(hex_grid: HexGridViewer):
     for i in range(0, hex_grid.get_width()):
         for j in range(0, hex_grid.get_height()):
             t = 'snow'
-            alt = 0.4
+            alt = random.uniform(0.2, 1)
             graphe_grid.add_vertex((i, j), t, alt)
 
+    # vert = graphe_grid.get_vertetx(4, 8)
+
+
+
+    """
     vert = graphe_grid.get_vertetx(4, 8 )
     v1 = graphe_grid.get_vertetx(4,9)
     v2 = graphe_grid.get_vertetx(5,10)
@@ -137,26 +142,31 @@ def question_river(hex_grid: HexGridViewer):
     v3.altitude = 0.7
     v4.altitude = 0.6
 
+    """
 
     for v in graphe_grid.vertex():
-        # ADD EDGES BETWEEN VERTEX
-        list = graphe_grid.get_neighbour(v.coord[0], v.coord[1])
+        list = graphe_grid.get_neighbour(v)
         for v2 in list:
             graphe_grid.add_edge(v, v2)
 
-    graphe_grid.rivière(vert)
+    listVertMax = graphe_grid.find_ListOfhigher()
+
+    rivieres = []
+    # show only one riviere in the graph
+    rivieres=graphe_grid.rivieres(listVertMax)
+
 
     for v in graphe_grid.vertex():
         # MODIFICATION DE LA COULEUR D'UNE CASE
-        hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
-        hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
-
+        hex_grid.add_color(v)
+        hex_grid.add_alpha(v)
 
     hex_grid.show(
         alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
-               "red": "fire", "black": "obsidian"}, show_altitude=False, debug_coords=True)
+               "red": "fire", "black": "obsidian"}, value_edgecolor="black", show_altitude=True, debug_coords=False)
 
-def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
+
+def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
     """
     Create a coherent card
     :param hex_grid: the grid to show
@@ -172,7 +182,7 @@ def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
 
     for v in graphe_grid.vertex():
         # Add edges between vertex of the graph
-        list = graphe_grid.get_neighbour(v.coord[0], v.coord[1])
+        list = graphe_grid.get_neighbour(v)
         for v2 in list:
             graphe_grid.add_edge(v, v2)
 
@@ -186,9 +196,8 @@ def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
         v.altitude = a / len(list_N)
         print(v.altitude)'''
 
-
     # Creation of area
-    for n in range (0, nb_zones):
+    for n in range(0, nb_zones):
         x = random.randrange(0, hex_grid.get_width())
         y = random.randrange(0, hex_grid.get_width())
         v = graphe_grid.get_vertetx(x, y)
@@ -201,8 +210,7 @@ def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
         x = random.randrange(0, hex_grid.get_width())
         y = random.randrange(0, hex_grid.get_height())
         v = graphe_grid.get_vertetx(x, y)
-        graphe_grid.rivière(v)
-
+        graphe_grid.riviere(v)
 
     for v in graphe_grid.vertex():
         # Modification of the color and the opacity of one cell
@@ -212,4 +220,3 @@ def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
     hex_grid.show(
         alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
                "red": "fire", "black": "obsidian"}, show_altitude=False, debug_coords=False)
-

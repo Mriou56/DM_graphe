@@ -5,14 +5,14 @@ from Vertex import *
 from HexGridViewer import *
 import random
 
-
 ## Dictionary for the area
-dict_area = {'ville' : {0: 'dimgray', 1: 'gray', 2: 'darkgray', 3: 'silver', 4: 'darkolivegreen'},
-             'desert' : {0: 'sandybrown', 1: 'peru', 2:'peachpuff', 3:'navajowhite', 4:'papayawhip'},
-             'foret' : {0:'darkgreen', 1:'forestgreen', 2:'green', 3:'mediumseagreen', 4:'palegreen'},
-             'montagne' : {0:'snow', 1:'linen', 2:'saddlebrown', 3:'sienna', 4:'darkkhaki'},
-             'volcan' : {0:'red', 1:'orangered', 2:'darkred', 3:'saddlebrown', 4:'black'},
-             'lagon' : {0:'lightseagreen', 1:'mediumturquoise', 2:'turquoise', 3:'aquamarine', 4:'aquamarine'}}
+dict_area = {'ville': {0: 'dimgray', 1: 'gray', 2: 'darkgray', 3: 'silver', 4: 'darkolivegreen'},
+             'desert': {0: 'sandybrown', 1: 'peru', 2: 'peachpuff', 3: 'navajowhite', 4: 'papayawhip'},
+             'foret': {0: 'darkgreen', 1: 'forestgreen', 2: 'green', 3: 'mediumseagreen', 4: 'palegreen'},
+             'montagne': {0: 'snow', 1: 'linen', 2: 'saddlebrown', 3: 'sienna', 4: 'darkkhaki'},
+             'volcan': {0: 'red', 1: 'orangered', 2: 'darkred', 3: 'saddlebrown', 4: 'black'},
+             'lagon': {0: 'lightseagreen', 1: 'mediumturquoise', 2: 'turquoise', 3: 'aquamarine', 4: 'aquamarine'}}
+
 
 class GraphList(Graph):
 
@@ -52,7 +52,7 @@ class GraphList(Graph):
             return vertex2.coord in self.graph_dict[vertex1.coord]
 
     def vertex(self):
-        """Return a list of all the vertex of a graph"""
+        """Return the dict where we have a list of all the vertex of a graph"""
         return self.graph_dict
 
     def label(self):
@@ -145,7 +145,7 @@ class GraphList(Graph):
                     return label
         raise Exception(f"vertex doen'st exists : ({vertex1}, {vertex2})")
 
-    def get_neighbour(self, x, y):
+    def get_neighbourold(self, x, y):
         """
         Get the neighbour of a vertex with it coordinates
         :param x: abscissa coordinate of the vertex
@@ -167,6 +167,33 @@ class GraphList(Graph):
 
         return list_v
 
+    def get_neighbour(self, v: Vertex):
+        """
+        Get the neighbour of a vertex v with it coordinates
+        :param v: vertex (search his neighbour)
+
+
+        reprendre dans le code du prof in res if 0 <= dx < self.__width and 0 <= dy < self.__height
+        """
+        list_v = []
+
+        if v.coord[1] % 2 == 0:
+            res = [(v.coord[0] + dx, v.coord[1] + dy) for dx, dy in
+                   ((1, 0), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1))]
+        else:
+            res = [(v.coord[0] + dx, v.coord[1] + dy) for dx, dy in ((1, 0), (1, 1), (0, 1), (-1, 0), (0, -1), (1, -1))]
+        for vn in self.vertex():
+            for dx, dy in res:
+                if dx == vn.coord[0] and dy == vn.coord[1]:
+                    list_v.append(vn)
+
+        # temp - show items
+        #       print("Voisin de : ", v.altitude)
+        #       for i in list_v:
+        #           print("> ", i.altitude)
+
+        return list_v
+
     def get_vertetx(self, x, y):
         """
         Get the corresponding vertex of the graph
@@ -184,16 +211,37 @@ class GraphList(Graph):
 
     def find_higher(self):
         """
-        Get the higher vertex of the graph
+        Get the higher vertex of the graph if several return a list
         :return:
         """
-        max = 0
-        v_max = None
+        # convert the dictionary items in a list and get the 1st items
+        v_max = list(self.vertex())[0]
+        max = v_max.altitude
         for v in self.vertex():
-            if v.alt > max:
-                max = v.alt
+            if v.altitude > max:
+                max = v.altitude
                 v_max = v
         return v_max
+
+    def find_ListOfhigher(self):
+        """
+        Get the list of higher vertex of the graph (same altitude)
+        :return:
+        """
+        v_max = self.find_higher()
+        mmax = [v_max]
+        lVectWithoutOne = list(self.vertex())
+        nb = 0
+        nb2 = 0
+        # loop to search all vertex with same altitude and add it in a list
+        for v in lVectWithoutOne:
+            nb2 = nb2 + 1
+            if v.altitude == v_max.altitude:
+                nb = nb + 1
+                if v not in mmax:
+                    mmax.add(v)
+                    nb = nb + 1
+        return mmax
 
     def zone(self, centre: Vertex, dist, dico: dict):
         """
@@ -216,7 +264,7 @@ class GraphList(Graph):
             current_vertex.terrain = dico[current_distance % 6]
 
             if current_distance < dist:
-                neighbors = self.get_neighbour(current_vertex.coord[0], current_vertex.coord[1])
+                neighbors = self.get_neighbour(current_vertex)
 
                 for neighbor in neighbors:
                     if neighbor not in visited:
@@ -256,7 +304,7 @@ class GraphList(Graph):
                 current_vertex.altitude = random.uniform(0.1, 0.3)
 
             if current_distance < dist:
-                neighbors = self.get_neighbour(current_vertex.coord[0], current_vertex.coord[1])
+                neighbors = self.get_neighbour(current_vertex)
 
                 for neighbor in neighbors:
                     if neighbor not in visited:
@@ -279,32 +327,89 @@ class GraphList(Graph):
                         if neighbor.altitude <= 0.1:
                             neighbor.altitude = 0.1
 
-    def rivière(self, vert: Vertex):
+    def DFSinner(self, ver: Vertex, parcours: list):
+        ver.terrain = "blue"
+        min = []
+        min_max = -1
+        max = None
+
+        for t in self.succ(ver):
+            if t.altitude < ver.altitude:
+                min.append(t)
+
+        for i in min:
+            if i.altitude > min_max:
+                min_max = i.altitude
+                max = i
+
+        if max != None:
+            parcours.append(max)
+            self.DFSinner(max, parcours)
+
+    def DFS(self, listVertNeigbour: [], vert: Vertex, path=None):
+        """
+        Return the longer path (can have several with the same distance)
+        :param vert: Vertex
+        :param listVertNeigbour: list of vertex neighbourg of vert
+        """
+        if path is None: path = [vert]
+        paths = []
+        paths_node = []
+        for v in listVertNeigbour:
+            if v.altitude <= vert.altitude:
+                t_path = path + [v]
+                paths_node.append(tuple(t_path))
+                paths_node.extend(self.DFS(self.get_neighbour(v), v, t_path))
+
+
+        if (len(paths_node) > 0):
+            max_len = max(len(p) for p in paths_node)
+            paths.extend([p for p in paths_node if len(p) == max_len])
+
+        return paths
+
+    # def riviere(self, vert: Vertex):
+    def rivieres(self, listVertMaxAltitude: list):
+        """
+        From a list of Vertex, create for each one riviere
+        :param listVertMaxAltitude: list of vertex having the altitude max
+        :return: tab of tabs. each tab is a rivier path
+        """
+        # calcul path for a vertex (vert)
+        # for each vertex (having same altitude) compare the length
+        rivieres = []
+        i=0
+        for vM in listVertMaxAltitude:
+            rivieres.append(self.riviere(vM))
+        return rivieres
+
+    def riviere(self, vert: Vertex):
         """
         Create a river from a vertex
-        :param vert: The vertex of the beginning
-        :return:
+        :param vert: start of river and search max path from this vertex
+        :return: max path of riviere (if several paths with same longer return only one)
         """
-        parcours = [vert]
+        # calcul the longer path for a vertex (vert)
+        all_paths = self.DFS(self.get_neighbour(vert), vert)
+        if len(all_paths) > 0:
+            max_len = max(len(p) for p in all_paths)
+            all_maxpaths = [p for p in all_paths if len(p) == max_len]
+            #  take only the 1st path (same if we have several path with the same length)
+            for v in all_maxpaths[0]:
+                v.terrain = 'royalblue'
 
-        def DFSinner(ver):
-            ver.terrain = "royalblue"
-            min = []
-            min_max = 0
-            max = None
-            for t in self.succ(ver):
-                if t.altitude < ver.altitude:
-                    min.append(t)
 
-            for i in min:
-                if i.altitude > min_max:
-                    min_max = i.altitude
-                    max = i
+            return all_maxpaths[0]
+        else:
+            return all_paths
 
-            if max != None:
-                parcours.append(max)
-                DFSinner(max)
 
-        DFSinner(vert)
-        for v in parcours:
-            v.terrain = 'royalblue'
+    def createEmbranchementRiviere(self, riviere: list, pointEmbranchment=None):
+        #question c) pas trop capter ce qu'il a voulu dire
+        """
+        if len(riviere) > 0:
+            if pointEmbranchment is None: pointEmbranchment = random.choice(riviere)
+            if pointEmbranchment.altitude > 0:
+                print("Embrachement altitude", pointEmbranchment.altitude)
+                self.riviere(pointEmbranchment)
+            """

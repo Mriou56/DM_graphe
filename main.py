@@ -23,7 +23,7 @@ if __name__ == "__main__":
     # main()
 
     # CREATION D'UNE GRILLE 15x15
-    hex_grid = HexGridViewer(50, 50)
+    hex_grid = HexGridViewer(6, 6)
 
     # test()
     #question_1(hex_grid)
@@ -31,19 +31,19 @@ if __name__ == "__main__":
     ## Quel algorithme utiliser pour générer une zone régulière qui s'étend sur la carte (i.e. toutes les cases à
     # distance $i$ d'une case)?
 
-    # question_zone(hex_grid)
+    #question_zone(hex_grid)
 
     ## Quel algorithme permettrait de tracer des rivières à partir d'un point donné sur la carte, en ajoutant une
     # contrainte d'altitude descendante en prenannt le chemin le plus long possible ?
 
     '''Le mieux est de s'inspirer du code du DFS'''
 
-    # question_river(hex_grid)
+    question_river(hex_grid)
 
 
     # Algo pour faire une carte jolie
 
-    carte(hex_grid, 10, 20)
+    #carte(hex_grid, 10, 20)
 
     ## Quel algorithme utiliser pour aller d'un point A à un point B ?
 
