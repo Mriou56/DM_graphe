@@ -40,7 +40,7 @@ class UnionFind:
 
 ### Sorting function ######
 
-def BFS(graph, vertex):
+def BFS(graph, vertex: Vertex):
     """
     :param graph: the graph we study
     :param vertex: the vertex we begin with

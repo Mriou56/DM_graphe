@@ -7,6 +7,7 @@ from Graph_List import *
 from HexGridViewer import *
 from Cercle import *
 from Rect import *
+from Tri import *
 
 
 def test():
@@ -162,6 +163,8 @@ def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
     :param hex_grid: the grid to show
     :return:
     """
+    tab_ville = []
+
     # Creation of a graph
     graphe_grid = GraphList(False)
     for i in range(0, hex_grid.get_width()):
@@ -176,25 +179,36 @@ def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
         for v2 in list:
             graphe_grid.add_edge(v, v2)
 
-    # Modification for a logical altitude
-    '''list_N = graphe_grid.get_neighbour(i, j)
-    a = 0
-    if len(list_N) > 1:
-        for n in list_N:
-            a += n.altitude
-        v = graphe_grid.get_vertetx(i, j)
-        v.altitude = a / len(list_N)
-        print(v.altitude)'''
-
-
     # Creation of area
     for n in range (0, nb_zones):
         x = random.randrange(0, hex_grid.get_width())
         y = random.randrange(0, hex_grid.get_width())
         v = graphe_grid.get_vertetx(x, y)
         d = random.randrange(1, 5)
-        biome = random.choice(tuple(dict_area.keys()))
-        graphe_grid.zone2(v, d, dict_area[biome])
+        biome = random.choices(tuple(dict_area.keys()), weights=(9,3,5,4,2,2), k=1)
+        graphe_grid.zone2(v, d, dict_area[biome[0]])
+
+        if biome[0] == 'ville':
+            hex_grid.add_symbol(*v.coord, Circle("red"))
+            tab_ville.append(v)
+
+    # Creation of a subgraph with all the town
+    graphe_ville = GraphList(False)
+    for v in tab_ville:
+        graphe_ville.add_vertex(v.coord, v.terrain, v.altitude)
+
+    for v1 in graphe_ville.vertex():
+        for v2 in graphe_ville.vertex():
+            # Get the address of the vertex in the graph grid
+            vertex1 = graphe_grid.get_vertetx(*v1.coord)
+            vertex2 = graphe_grid.get_vertetx(*v2.coord)
+
+            # Get the shortest path between two towns in the grid
+            short = pcc(graphe_grid, vertex1, vertex2)
+            for x in range(0,len(short)-1):
+                print(short[x].coord)
+                hex_grid.add_link(short[x].coord, short[x+1].coord, "purple")
+
 
     # Creation of the rivers
     for n in range(0, nb_rivers):
