@@ -40,6 +40,7 @@ if __name__ == "__main__":
 
     # question_river(hex_grid)
 
+
     # Algo pour faire une carte jolie
 
     carte(hex_grid, 5, 10)
