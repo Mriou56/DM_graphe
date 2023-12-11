@@ -94,3 +94,10 @@ qui représente un sommet dans un graphe. Chaque sommet est caractérisé par se
 La méthode '__ init __' initialise les attributs du sommet lors de sa création.
 
 a finir je fais ça se soir
+
+## Question 7 :
+Pour trouver le chemin le plus rapide entre 2 villes nous utilisons la fonction pcc qui detremine le plus court chemin entre deux sommets quand nous n'avons pas de contraintes de pondération.
+Il s'agit d'un algorithme ayant une complexité temporelle en O(|S|+|A|) avec S le nombre de sommets du graphe et A le nombre d'arrêtes.
+
+## Question 8:
+Maintenant nous pouvons pondérer les arètes en fonction du type de terrain

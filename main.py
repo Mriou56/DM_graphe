@@ -40,10 +40,15 @@ if __name__ == "__main__":
 
     # question_river(hex_grid)
 
-
     # Algo pour faire une carte jolie
 
-    carte(hex_grid, 5, 6)
+    carte(hex_grid, 5, 10)
+    """
+    Tests de temps
+    Grille 15x15 et 5 villes => 0.004   et 10 villes => 004
+    Grille 50x50 et 5 villes=> 0.5      et 10 villes => 0.5
+    Grille 90x90 et 5 villes => 5.6     et 10 villes => 5.6
+    """
 
     ## Quel algorithme utiliser pour aller d'un point A à un point B ?
 

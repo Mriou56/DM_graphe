@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import random
+import time
 
 from Graph_List import *
 
@@ -185,7 +186,7 @@ def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
         y = random.randrange(0, hex_grid.get_width())
         v = graphe_grid.get_vertetx(x, y)
         d = random.randrange(1, 5)
-        biome = random.choices(tuple(dict_area.keys()), weights=(9,3,5,4,2,2), k=1)
+        biome = random.choices(tuple(dict_area.keys()), weights=(9,3,5,4,2,2), k=1) # weights for the ponderation and k for the len of the list
         graphe_grid.zone2(v, d, dict_area[biome[0]])
 
         if biome[0] == 'ville':
@@ -204,9 +205,10 @@ def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
             vertex2 = graphe_grid.get_vertetx(*v2.coord)
 
             # Get the shortest path between two towns in the grid
+            #tstart = time.time()
             short = pcc(graphe_grid, vertex1, vertex2)
+            #print(time.time() - tstart)
             for x in range(0,len(short)-1):
-                print(short[x].coord)
                 hex_grid.add_link(short[x].coord, short[x+1].coord, "purple")
 
 
@@ -223,7 +225,10 @@ def carte(hex_grid : HexGridViewer, nb_rivers, nb_zones):
         hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
         hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
 
-    hex_grid.show(
-        alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
-               "red": "fire", "black": "obsidian"}, show_altitude=False, debug_coords=False)
+    hex_grid.show(alias={"royalblue": "water", "snow": "snow", "gray": "town", "sandybrown": "desert",
+                         "darkolivegreen": "périphérie",
+                         "darkgreen": "foret", "forestgreen": "foret", "linen": "montagne", "sienna": "montagne",
+                         "red": "lava",
+                         "darkred": "lava", "saddlebrown": "obscidian", "black": "obsidian", "turquoise": "lagon", "green":"grass"},
+                  debug_coords=False)
 

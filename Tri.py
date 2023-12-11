@@ -60,6 +60,7 @@ def BFS(graph, vertex: Vertex):
                 pred[i] = val
                 queue.append(i)
                 grey.append(i)
+
     return parcours, pred
 
 
@@ -176,15 +177,15 @@ def connex_compo(graph):
 def pcc(graph, vertex1, vertex2):
     """
     Find the shorter path between two vertex
-    :param vertex1:
-    :param vertex2:
+    :param vertex1: the beginning vertex
+    :param vertex2: the end vertex
     :param graph: the graph we study
     :return: The shorter path between two vertex
     """
-    dic_pred = BFS(graph, vertex1)[1]
+    dic_pred = BFS(graph, vertex1)[1] # Complexity = nb edges + nb vertex
     pcc = []
     v = vertex2
-    while dic_pred[v] is not None:
+    while dic_pred[v] is not None: # Complexity = nb edges + nb vertex
         pcc.append(v)
         v = dic_pred[v]
     pcc.append(v)

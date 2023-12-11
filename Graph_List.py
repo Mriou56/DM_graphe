@@ -8,12 +8,13 @@ import random
 
 
 ## Dictionary for the area
-dict_area = {'ville' : {0: 'dimgray', 1: 'gray', 2: 'darkgray', 3: 'silver', 4: 'darkolivegreen'},
-             'desert' : {0: 'sandybrown', 1: 'peru', 2:'peachpuff', 3:'navajowhite', 4:'papayawhip'},
-             'foret' : {0:'darkgreen', 1:'forestgreen', 2:'green', 3:'mediumseagreen', 4:'palegreen'},
-             'montagne' : {0:'snow', 1:'linen', 2:'saddlebrown', 3:'sienna', 4:'darkkhaki'},
-             'volcan' : {0:'red', 1:'orangered', 2:'darkred', 3:'saddlebrown', 4:'black'},
-             'lagon' : {0:'lightseagreen', 1:'mediumturquoise', 2:'turquoise', 3:'aquamarine', 4:'aquamarine'}}
+dict_area = {'ville' : {0: 'gray', 1: 'gray', 2: 'gray', 3: 'gray', 4: 'darkolivegreen'},
+             'desert' : {0: 'sandybrown', 1: 'sandybrown', 2:'sandybrown', 3:'sandybrown', 4:'sandybrown'},
+             'foret' : {0:'darkgreen', 1:'forestgreen', 2:'forestgreen', 3:'forestgreen', 4:'forestgreen'},
+             'montagne' : {0:'snow', 1:'linen', 2:'sienna', 3:'sienna', 4:'sienna'},
+             'volcan' : {0:'red', 1:'darkred', 2:'darkred', 3:'saddlebrown', 4:'black'},
+             'lagon' : {0:'turquoise', 1:'turquoise', 2:'turquoise', 3:'turquoise', 4:'aquamarine'}}
+
 
 class GraphList(Graph):
 
@@ -186,14 +187,15 @@ class GraphList(Graph):
     def find_higher(self):
         """
         Get the higher vertex of the graph
-        :return:
+        :return: a vertex
         """
         max = 0
         v_max = None
         for v in self.vertex():
-            if v.alt > max:
-                max = v.alt
+            if v.altitude > max:
+                max = v.altitude
                 v_max = v
+
         return v_max
 
     def zone(self, centre: Vertex, dist, dico: dict):
@@ -230,11 +232,7 @@ class GraphList(Graph):
         :type centre: the center vertex
         :param dist: dist of the area
         :param dico: the dictionary of the corresponding area
-        :return: zone of neighbor
-        en partant d'un sommet,
-        on va chercher à implémenter une zone autour de ce sommet.
-        Cette zone sera de rayon dist. (exemple : si je pars du centre, il faut que je parcoure tous les sommets autours
-        du centre puis les sommets autour des sommets du centre, etc).
+        :return: zone of neighbors
        """
         queue = [(centre, 0)]
         visited = set()
