@@ -233,6 +233,7 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
                 hex_grid.add_link(short[x].coord, short[x+1].coord, "purple")
 
 
+
     # Creation of the rivers
     for n in range(0, nb_rivers):
         x = random.randrange(0, hex_grid.get_width())

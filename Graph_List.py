@@ -17,6 +17,7 @@ dict_area = {'ville' : {0: 'gray', 1: 'gray', 2: 'gray', 3: 'gray', 4: 'darkoliv
              'lagon' : {0:'turquoise', 1:'turquoise', 2:'turquoise', 3:'turquoise', 4:'aquamarine'}}
 
 
+
 class GraphList(Graph):
 
     def __init__(self, directed):
