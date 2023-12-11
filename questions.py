@@ -113,7 +113,7 @@ def question_zone(hex_grid: HexGridViewer):
 
 def question_river(hex_grid: HexGridViewer):
     """
-    Test for the creation of a river
+    Question 5 -  for the creation of a river
     :param hex_grid: the grid to show
     :return:
     """
@@ -125,30 +125,13 @@ def question_river(hex_grid: HexGridViewer):
             alt = random.uniform(0.2, 1)
             graphe_grid.add_vertex((i, j), t, alt)
 
-    # vert = graphe_grid.get_vertetx(4, 8)
-
-
-
-    """
-    vert = graphe_grid.get_vertetx(4, 8 )
-    v1 = graphe_grid.get_vertetx(4,9)
-    v2 = graphe_grid.get_vertetx(5,10)
-    v3 =  graphe_grid.get_vertetx(6,10)
-    v4 = graphe_grid.get_vertetx(7,10)
-
-    vert.altitude = 1
-    v1.altitude = 0.9
-    v2.altitude = 0.8
-    v3.altitude = 0.7
-    v4.altitude = 0.6
-
-    """
-
+    # add edge (arrête) entre les Vertex
     for v in graphe_grid.vertex():
         list = graphe_grid.get_neighbour(v)
         for v2 in list:
             graphe_grid.add_edge(v, v2)
 
+    # get Max altitude
     listVertMax = graphe_grid.find_ListOfhigher()
 
     rivieres = []
@@ -168,20 +151,29 @@ def question_river(hex_grid: HexGridViewer):
 
 def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
     """
-    Create a coherent card
+    Question 6 - Create a coherent card
     :param hex_grid: the grid to show
+    :param nb_zones: that we want to have
     :return:
     """
     tab_ville = []
-
-    # Creation of a graph
+    #calcule max distance - that is linked to hex_grid.width and height
+    if hex_grid.get_width() >  hex_grid.get_height():
+        #take height as reference
+        max_distance = int(hex_grid.get_height() / 4)
+    else:
+        max_distance = int(hex_grid.get_width() / 4)
+    if max_distance < 2:
+        max_distance = 2
+    # Creation of a graph - all is green
+    # positionnement zone de plaine dans le Graph
     graphe_grid = GraphList(False)
     for i in range(0, hex_grid.get_width()):
         for j in range(0, hex_grid.get_height()):
             t = 'green'
             alt = random.uniform(0.2, 0.5)
             graphe_grid.add_vertex((i, j), t, alt)
-
+    # add edge (arrête) entre les Vertex
     for v in graphe_grid.vertex():
         # Add edges between vertex of the graph
         list = graphe_grid.get_neighbour(v)
@@ -198,20 +190,26 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
         v.altitude = a / len(list_N)
         print(v.altitude)'''
 
-    # Creation of area
+    # Ajout dans le Grid des zones (biomes)de manière aléatoire - zone de type eau, sable, glace, ville (les rivieres
+    # ne sont pas des zones
+    # On va modifier les zones en augmantant ou diminuant l'altide
+
+    zones = []
     for n in range(0, nb_zones):
         x = random.randrange(0, hex_grid.get_width())
         y = random.randrange(0, hex_grid.get_width())
         v = graphe_grid.get_vertetx(x, y)
-        d = random.randrange(1, 5)
+        d = random.randrange(1, max_distance)
+        # random with weight to define the type of biome (villes ou desert ...)
         biome = random.choices(tuple(dict_area.keys()), weights=(9,3,5,4,2,2), k=1)
-        graphe_grid.zone2(v, d, dict_area[biome[0]])
-
+        zone = graphe_grid.zone2(v, d, biome[0], dict_area[biome[0]])
+        zones.append(zone)
         if biome[0] == 'ville':
             hex_grid.add_symbol(*v.coord, Circle("red"))
             tab_ville.append(v)
 
     # Creation of a subgraph with all the town
+    """ 
     graphe_ville = GraphList(False)
     for v in tab_ville:
         graphe_ville.add_vertex(v.coord, v.terrain, v.altitude)
@@ -227,7 +225,7 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
             for x in range(0,len(short)-1):
                 print(short[x].coord)
                 hex_grid.add_link(short[x].coord, short[x+1].coord, "purple")
-
+    """
 
     # Creation of the rivers
     for n in range(0, nb_rivers):
@@ -238,8 +236,11 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
 
     for v in graphe_grid.vertex():
         # Modification of the color and the opacity of one cell
-        hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
-        hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
+        # MODIFICATION DE LA COULEUR D'UNE CASE
+        hex_grid.add_color(v)
+        hex_grid.add_alpha(v)
+       # hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
+       # hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
 
     hex_grid.show(
         alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",

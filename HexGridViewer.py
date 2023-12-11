@@ -62,6 +62,7 @@ class HexGridViewer:
             f"self.__colors type must be in matplotlib colors. What is {self.__colors[(x, y)]} ?"
         self.__colors[(x, y)] = color
 
+
     def add_color(self, v: Vertex) -> None:
         assert self.__colors[v.coord] in mcolors.CSS4_COLORS, \
             f"self.__colors type must be in matplotlib colors. What is {self.__colors[v.coord]} ?"
@@ -71,6 +72,7 @@ class HexGridViewer:
         assert 0 <= self.__alpha[
             (x, y)] <= 1, f"alpha value must be between 0 and 1. What is {self.__alpha[(x, y)]} ?"
         self.__alpha[(x, y)] = alpha
+
 
     def add_alpha(self, v: Vertex) -> None:
         assert 0 <= self.__alpha[
@@ -127,7 +129,6 @@ class HexGridViewer:
                 coords[(row, col)] = (x, y)
 
                 center = (x, y)
-                # hexagon = RegularPolygon(center, numVertices=6, radius=h, orientation=np.pi / 6, edgecolor="black")
                 hexagon = RegularPolygon(center, numVertices=6, radius=h, orientation=np.pi / 6,
                                          edgecolor=value_edgecolor)
                 hexagon.set_facecolor(self.__colors[(row, col)])
@@ -142,7 +143,7 @@ class HexGridViewer:
                     if show_altitude:
                         # alpha = altitude of Vertex
                         # *10 to improve the visibility of altitude in the graph
-                       # text_altitude = f"{int(self.__alpha[(row, col)] * 10)}"
+                        #text_altitude = f"{int(self.__alpha[(row, col)] * 10)}"
                         text_altitude = f"{float(self.__alpha[(row, col)] )}"
                         ax.annotate(text_altitude, xy=center, ha='center', va='center', fontsize=6, color='black')
 

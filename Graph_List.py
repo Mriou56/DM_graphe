@@ -2,6 +2,7 @@
 from abc import ABC, abstractmethod
 from Graph import *
 from Vertex import *
+from Zone import *
 from HexGridViewer import *
 from Cercle import *
 import random
@@ -272,34 +273,39 @@ class GraphList(Graph):
                         queue.append((neighbor, current_distance + 1))
                         visited.add(neighbor)
 
-    def zone2(self, centre: Vertex, dist, dico: dict):
+    def zone2(self, centre: Vertex, dist, typeZone, dico: dict):
         """
         Get the area around a vertex
         :type centre: the center vertex
         :param dist: dist of the area
         :param dico: the dictionary of the corresponding area
-        :return: zone of neighbor
+        :return: zone (that store list of vertex)
         en partant d'un sommet,
         on va chercher à implémenter une zone autour de ce sommet.
         Cette zone sera de rayon dist. (exemple : si je pars du centre, il faut que je parcoure tous les sommets autours
         du centre puis les sommets autour des sommets du centre, etc).
        """
         queue = [(centre, 0)]
+        zone=Zone(centre, dist,typeZone, dico)
+        current_distance = 0
         visited = set()
         visited.add(centre)
 
 
         while queue:
-            current_vertex, current_distance = queue.pop(0)
-            current_vertex.terrain = dico[current_distance % 6]
-            if dico == dict_area['ville'] or dico == dict_area['foret']:
+            current_vertex, current_distance = queue.pop(0) # queue.pop(0)
+            current_vertex.terrain = zone.areaDicoType[current_distance % 6]
+            if zone.typeZone == 'ville' or zone.typeZone == 'foret':
                 current_vertex.altitude = random.uniform(0.3, 0.6)
-            if dico == dict_area['montagne'] or dico == dict_area['volcan']:
-                current_vertex.altitude = random.uniform(0.8, 1)
-            if dico == dict_area['desert']:
-                current_vertex.altitude = random.uniform(0.4, 0.6)
-            if dico == dict_area['lagon']:
-                current_vertex.altitude = random.uniform(0.1, 0.3)
+            else:
+                if zone.typeZone == 'montagne' or zone.typeZone == 'volcan':
+                    current_vertex.altitude = random.uniform(0.8, 1)
+                else:
+                    if zone.typeZone == 'desert':
+                        current_vertex.altitude = random.uniform(0.4, 0.6)
+                    else:
+                        if zone.typeZone == 'lagon':
+                            current_vertex.altitude = random.uniform(0.1, 0.3)
 
             if current_distance < dist:
                 neighbors = self.get_neighbour(current_vertex)
@@ -307,24 +313,29 @@ class GraphList(Graph):
                 for neighbor in neighbors:
                     if neighbor not in visited:
                         queue.append((neighbor, current_distance + 1))
+                        zone.listVertexInTheZone.append((neighbor, current_distance + 1))
                         visited.add(neighbor)
-                        if dico == dict_area['foret'] or dico == dict_area['desert'] or dico == dict_area['ville']:
+                        if zone.typeZone == 'foret' or zone.typeZone == 'desert' or zone.typeZone == 'ville':
                             x = current_vertex.altitude - 0.2
                             y = current_vertex.altitude + 0.2
                             neighbor.altitude = random.uniform(x, y)
-                        if dico == dict_area['montagne'] or dico == dict_area['volcan']:
-                            x = current_vertex.altitude - 0.1
-                            y = current_vertex.altitude + 0.1
-                            neighbor.altitude = random.uniform(x, y)
-                        if dico == dict_area['lagon']:
-                            current_vertex.altitude = random.uniform(0.1, 0.3)
-                            neighbor.altitude = random.uniform(0.1, 0.3)
+                        else:
+                            if zone.typeZone == 'montagne' or zone.typeZone == 'volcan':
+                                x = current_vertex.altitude - 0.1
+                                y = current_vertex.altitude + 0.1
+                                neighbor.altitude = random.uniform(x, y)
+                            else:
+                                if zone.typeZone == 'lagon':
+                                    current_vertex.altitude = random.uniform(0.1, 0.3)
+                                    neighbor.altitude = random.uniform(0.1, 0.3)
 
                         # Test if the altitude of the vertex is between 0 and 1
                         if neighbor.altitude >= 1:
                             neighbor.altitude = 1
-                        if neighbor.altitude <= 0.1:
-                            neighbor.altitude = 0.1
+                        else:
+                            if neighbor.altitude <= 0.1:
+                                neighbor.altitude = 0.1
+        return zone
 
     def DFSinner(self, ver: Vertex, parcours: list):
         ver.terrain = "blue"
@@ -351,7 +362,8 @@ class GraphList(Graph):
         :param vert: Vertex
         :param listVertNeigbour: list of vertex neighbourg of vert
         """
-        if path is None: path = [vert]
+        if path is None:
+            path = [vert]
         paths = []
         paths_node = []
         for v in listVertNeigbour:
