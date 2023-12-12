@@ -161,6 +161,7 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
     :return:
     """
     tab_ville = []
+
     #calcule max distance - that is linked to hex_grid.width and height
     if hex_grid.get_width() >  hex_grid.get_height():
         #take height as reference
@@ -171,13 +172,13 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
         max_distance = 2
         
     # Creation of a graph - all is green
-    # positionnement zone de plaine dans le Graph
     graphe_grid = GraphList(False)
     for i in range(0, hex_grid.get_width()):
         for j in range(0, hex_grid.get_height()):
             t = 'green'
             alt = random.uniform(0.2, 0.5)
             graphe_grid.add_vertex((i, j), t, alt)
+
     # add edge (arrête) entre les Vertex
     for v in graphe_grid.vertex():
         # Add edges between vertex of the graph
@@ -254,4 +255,28 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
                          "red": "lava",
                          "darkred": "lava", "saddlebrown": "obscidian", "black": "obsidian", "turquoise": "lagon", "green":"grass"},
                   debug_coords=False)
+
+def carte_dikjrsta(hex_grid, nb_ville, nb_river):
+    """
+
+    :param hex_grid:
+    :param nb_ville:
+    :param nb_river:
+    :return:
+    """
+    # Creation of a graph - all is green
+    graphe_grid = GraphList(True)
+
+    for i in range(0, hex_grid.get_width()):
+        for j in range(0, hex_grid.get_height()):
+            t = 'green'
+            alt = random.uniform(0.2, 0.5)
+            graphe_grid.add_vertex((i, j), t, alt)
+
+    # add edge (arrête) entre les Vertex
+    for v in graphe_grid.vertex():
+        # Add edges between vertex of the graph
+        list = graphe_grid.get_neighbour(v)
+        for v2 in list:
+            graphe_grid.add_edge(v, v2)
 

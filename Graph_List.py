@@ -16,7 +16,7 @@ dict_area = {'ville' : {0: 'gray', 1: 'gray', 2: 'gray', 3: 'gray', 4: 'darkoliv
              'volcan' : {0:'red', 1:'darkred', 2:'darkred', 3:'saddlebrown', 4:'black'},
              'lagon' : {0:'turquoise', 1:'turquoise', 2:'turquoise', 3:'turquoise', 4:'aquamarine'}}
 
-
+dict_dist = { 'ville' : 1, 'desert' : 2, 'foret' : 2, 'montagne':3, 'obsidian': 3 }
 
 class GraphList(Graph):
 
