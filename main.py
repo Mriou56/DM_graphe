@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     # Algo pour faire une carte jolie
 
-    carte(hex_grid, 4, 5)
+    carte(hex_grid, 5, 6)
 
     ## Quel algorithme utiliser pour aller d'un point A à un point B ?
 
