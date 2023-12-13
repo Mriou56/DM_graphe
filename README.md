@@ -2,8 +2,8 @@
 
 ## Introduction :
 
-Au sein de notre parcours en ingénierie à l'ISEN de Caen,
-nous avons dû effectuer un devoir maison en théorie.
+Au sein de notre parcours en tant qu'élève en ingénierie à l'ISEN de Caen,
+nous avons dû effectuer un devoir maison en théorie des graphes.
 Notre tâche consistait à modéliser une zone géographique en deux dimensions,
 exploitant un code source initial fourni par notre professeur.
 L'utilisation de la bibliothèque Python, Matplotlib et Pyplot, a facilité la représentation visuelle de notre modèle.
@@ -23,6 +23,8 @@ les solutions élaborées et la répartition de notre travail.
 
 ## Question 1 :
 #### Proposez une implémentation d’un graphe, qui représente une grille hexagonale et qui possède toutes les propriétés d’un graphe
+
+*Question réalisée par Alexandre et Margot*
 
 Dans un premier temps, nous avons repris le [code](https://web.isen-ouest.fr/moodle4/pluginfile.php/16213/mod_resource/content/0/hexgrid_viewer.py) fournit sur le mooodle. 
 
@@ -85,13 +87,53 @@ Il intègre les classes GraphList et HexGridViewer pour créer et afficher une g
 #### — de labeliser les sommets par un type de terrain de votre choix (herbe, montagne, route, eau, etc...) ;
 #### — de labeliser les sommets par une altitude.
 
-Afin de réaliser cette extension, nous avons décidé de creer un fichier vertex.py.
+*Réalisation de la classe Vertex par margot*
+*Modification des fonctions de la classe Graph_List réalisé par alexandre et Margot*
+*Modification de la fonction show du fichier HexGridViewer.py réalisé par Alexandre*
+*Modification du paramètre alias dans le fichier question.py lors de l'appel de la fonction réalisé par Alexandre et margot*
+
+Afin de réaliser cette extension, nous avons creer un fichier vertex.py.
 contenant la classe :
 ```python
 Class Vertex :
 ```
 qui représente un sommet dans un graphe. Chaque sommet est caractérisé par ses coordonnées (coord), un type de terrain (terrain), et une altitude (alt).
 La méthode '__ init __' initialise les attributs du sommet lors de sa création.
+Nous avons ensuite modifié les paramètres de nos fonctions dans Graph_List.
+Une modification a été apportée au fichier HexGridViewer.py notamment dans la fonction show.
+Un paramètre show_altitude a été rajouté.
+Il permet lorsque le paramètre debug_coords est faux,
+d'afficher l'altitude de chacun de nos sommets.
+Chaque altitude étant initialisée dans le fichier question.py par :
+```python
+alt = random.uniform(0.2, 1)
+```
+Les altitudes varient entre 0.2 et 1. 
+Pour les afficher, cette modification a été apportée :
+```python
+ # Ajoute du texte à l'hexagone soit les coordonnées
+                if debug_coords:
+                    # Ajoute du texte à l'hexagone soit les coordonnées
+                    text = f"({row}, {col})"  # Le texte que vous voulez afficher
+                    ax.annotate(text, xy=center, ha='center', va='center', fontsize=8, color='black')
+                else:
+                    if show_altitude:
+                        # alpha = altitude of Vertex
+                        # *10 to improve the visibility of altitude in the graph
+                        text_altitude = f"{int(self.__alpha[(row, col)] * 10)}"
+                        #text_altitude = f"{float(self.__alpha[(row, col)] )}"
+                        ax.annotate(text_altitude, xy=center, ha='center', va='center', fontsize=6, color='black')
+```
+text_altitude permet d'afficher l'altitude, l'altitude a été 
+
+```python
+# AFFICHAGE DE LA GRILLE
+    # alias permet de renommer les noms de la légende pour des couleurs spécifiques.
+    # debug_coords permet de modifier l'affichage des coordonnées sur les cases.
+    hex_grid.show(
+        alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
+               "red": "fire", "black": "obsidian"}, show_altitude=True, debug_coords=False)
+```
 
 ## Question 3:
 Pour répondre à cette question nous avons créé la fonction question1

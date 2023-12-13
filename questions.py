@@ -206,7 +206,7 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
         x = random.randrange(0, hex_grid.get_width())
         y = random.randrange(0, hex_grid.get_width())
         v = graphe_grid.get_vertetx(x, y)
-        d = random.randrange(1, max_distance)
+        d = random.randrange(1, 4)
         # random with weight to define the type of biome (villes ou desert ...)
         biome = random.choices(tuple(dict_area.keys()), weights=(9,3,5,4,2,2), k=1)
         zone = graphe_grid.zone2(v, d, biome[0], dict_area[biome[0]])

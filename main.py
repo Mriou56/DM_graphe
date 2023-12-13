@@ -23,10 +23,10 @@ if __name__ == "__main__":
     # main()
 
     # CREATION D'UNE GRILLE 15x15
-    hex_grid = HexGridViewer(15, 15)
+    hex_grid = HexGridViewer(20, 20)
 
     # test()
-    #question_1(hex_grid)
+    question_1(hex_grid)
 
     ## Quel algorithme utiliser pour générer une zone régulière qui s'étend sur la carte (i.e. toutes les cases à
     # distance $i$ d'une case)?
@@ -43,7 +43,8 @@ if __name__ == "__main__":
 
     # Algo pour faire une carte jolie
 
-    #carte(hex_grid, 5, 10)
+
+    #carte(hex_grid, 5, 6)
     """
     Tests de temps
     Grille 15x15 et 5 villes => 0.004   et 10 villes => 004
@@ -76,7 +77,7 @@ if __name__ == "__main__":
 
     p = g.get_weight(v1, v3)'''
 
-    carte_dikjrsta(hex_grid, 5, 10)
+    #carte_dikjrsta(hex_grid, 15, 10)
 
 
 
