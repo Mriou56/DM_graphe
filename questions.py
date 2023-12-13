@@ -307,14 +307,16 @@ def carte_dikjrsta(hex_grid, nb_zone, nb_river):
                 graphe_grid.remove_edge(v, v2, dist)
 
     # Use the dijkstra algorithme to search the shortest path between two cities
+    print(tab_ville)
     for v1 in tab_ville:
         tstart = time.time()
         short = dijsktra(graphe_grid, v1)
         print('Le temps de parcours de Dijkstra =>', time.time() - tstart)
 
         print(short)
-        '''for x in range(0,len(short)-1):
-            hex_grid.add_link(short[x].coord, short[x+1].coord, "pink")'''
+        for k in short.keys():
+            if short[k] != None:
+                hex_grid.add_link(short[k].coord, k.coord, "black")
 
     for v in graphe_grid.vertex():
         # Modification of the color and the opacity of one cell

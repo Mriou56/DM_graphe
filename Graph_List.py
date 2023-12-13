@@ -143,11 +143,10 @@ class GraphList(Graph):
         :param vertex2: The second vertex of the edge
         :return: The weight of the edge
         """
-        tab_edge = self.edges()
-        print('poids')
-        for v1, v2 in tab_edge:
-            if (v1.coord, v2[0].coord) == (vertex1.coord, vertex2.coord):
-                return v2[1]
+        succ = self.succ(vertex1)
+        for v, l in succ:
+            if v == vertex2:
+                return l
         raise Exception(f"Edge doesn't exist: ({vertex1}, {vertex2})")
 
     def get_neighbourold(self, x, y):
