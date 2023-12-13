@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import random
+import time
 
 from Graph_List import *
 
 from HexGridViewer import *
 from Cercle import *
 from Rect import *
+from Tri import *
 
 
 def test():
@@ -159,6 +161,7 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
     :return:
     """
     tab_ville = []
+
     #calcule max distance - that is linked to hex_grid.width and height
     if hex_grid.get_width() >  hex_grid.get_height():
         #take height as reference
@@ -167,6 +170,7 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
         max_distance = int(hex_grid.get_width() / 4)
     if max_distance < 2:
         max_distance = 2
+
     # Creation of a graph - all is green
     # positionnement zone de plaine dans le Graph
     graphe_grid = GraphList(False)
@@ -175,6 +179,7 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
             t = 'green'
             alt = random.uniform(0.2, 0.5)
             graphe_grid.add_vertex((i, j), t, alt)
+
     # add edge (arrête) entre les Vertex
     for v in graphe_grid.vertex():
         # Add edges between vertex of the graph
@@ -201,17 +206,18 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
         x = random.randrange(0, hex_grid.get_width())
         y = random.randrange(0, hex_grid.get_width())
         v = graphe_grid.get_vertetx(x, y)
-        d = random.randrange(1, 4)
+        d = random.randrange(1, max_distance)
         # random with weight to define the type of biome (villes ou desert ...)
         biome = random.choices(tuple(dict_area.keys()), weights=(9,3,5,4,2,2), k=1)
         zone = graphe_grid.zone2(v, d, biome[0], dict_area[biome[0]])
         zones.append(zone)
+        #graphe_grid.zone2(v, d, dict_area[biome[0]])
+
         if biome[0] == 'ville':
             hex_grid.add_symbol(*v.coord, Circle("red"))
             tab_ville.append(v)
 
     # Creation of a subgraph with all the town
-    """ 
     graphe_ville = GraphList(False)
     for v in tab_ville:
         graphe_ville.add_vertex(v.coord, v.terrain, v.altitude)
@@ -223,11 +229,13 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
             vertex2 = graphe_grid.get_vertetx(*v2.coord)
 
             # Get the shortest path between two towns in the grid
+            #tstart = time.time()
             short = pcc(graphe_grid, vertex1, vertex2)
+            #print(time.time() - tstart)
             for x in range(0,len(short)-1):
-                print(short[x].coord)
                 hex_grid.add_link(short[x].coord, short[x+1].coord, "purple")
-    """
+
+
 
     # Creation of the rivers
     for n in range(0, nb_rivers):
@@ -238,13 +246,39 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
 
     for v in graphe_grid.vertex():
         # Modification of the color and the opacity of one cell
-        # MODIFICATION DE LA COULEUR D'UNE CASE
         hex_grid.add_color(v)
         hex_grid.add_alpha(v)
        # hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
        # hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
 
-    hex_grid.show(
-        alias={"royalblue": "water", "chocolate": "path", "forestgreen": "grass", "grey": "stone", "snow": "snow",
-               "red": "fire", "black": "obsidian"}, show_altitude=True, debug_coords=False)
+    hex_grid.show(alias={"royalblue": "water", "snow": "snow", "gray": "town", "sandybrown": "desert",
+                         "darkolivegreen": "périphérie",
+                         "darkgreen": "foret", "forestgreen": "foret", "linen": "montagne", "sienna": "montagne",
+                         "red": "lava",
+                         "darkred": "lava", "saddlebrown": "obscidian", "black": "obsidian", "turquoise": "lagon", "green":"grass"},
+                  debug_coords=False)
+
+def carte_dikjrsta(hex_grid, nb_ville, nb_river):
+    """
+
+    :param hex_grid:
+    :param nb_ville:
+    :param nb_river:
+    :return:
+    """
+    # Creation of a graph - all is green
+    graphe_grid = GraphList(True)
+
+    for i in range(0, hex_grid.get_width()):
+        for j in range(0, hex_grid.get_height()):
+            t = 'green'
+            alt = random.uniform(0.2, 0.5)
+            graphe_grid.add_vertex((i, j), t, alt)
+
+    # add edge (arrête) entre les Vertex
+    for v in graphe_grid.vertex():
+        # Add edges between vertex of the graph
+        list = graphe_grid.get_neighbour(v)
+        for v2 in list:
+            graphe_grid.add_edge(v, v2)
 

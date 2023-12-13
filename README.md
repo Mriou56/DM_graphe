@@ -93,4 +93,29 @@ Class Vertex :
 qui représente un sommet dans un graphe. Chaque sommet est caractérisé par ses coordonnées (coord), un type de terrain (terrain), et une altitude (alt).
 La méthode '__ init __' initialise les attributs du sommet lors de sa création.
 
-a finir je fais ça se soir
+## Question 3:
+Pour répondre à cette question nous avons créé la fonction question1
+
+## Question 4:
+Pour creer une zone nous avons dans un premier temps fait une fonction pour l'impémenter dans la grille puis nous avons ajouté une classe 
+
+## Question 5:
+Pour créer une rivière nous recherchons les points les plus hauts de la grille à l'aide de la fonction find_higher puis à l'aide d'un code DFS nous cherchons le chemin le plus long à partir de ces sommets
+
+Concernant les embranchements si deux rivères se rejoingnent elle vont juste devenir une seule rivière
+
+## Qustion 6:
+Pour ajouter de la logique à notre carte nous avons créé des zones ayant des altitudes dans un intervalle défini qui varie faiblement d'un voisin à l'autre  que nous ajoutons sur notre crate qui à également des sommets d'altitudes aléatoire
+
+## Question 7 :
+Pour trouver le chemin le plus rapide entre 2 villes nous utilisons la fonction pcc qui detremine le plus court chemin entre deux sommets quand nous n'avons pas de contraintes de pondération.
+Il s'agit d'un algorithme ayant une complexité temporelle en O(|S|+|A|) avec S le nombre de sommets du graphe et A le nombre d'arrêtes.
+
+## Question 8:
+Maintenant nous pouvons pondérer les arètes en fonction du type de terrain
+Pour empecher les chemins de passer par les rivières il faut supprimer les arrètes des sommets par lesquels passent une rivière ou une zone aquatique
+
+## Question 9:
+Pour creer ce réseau le mieux est d'utiliser l'algorithme de Kruskal
+
+## Question 10:

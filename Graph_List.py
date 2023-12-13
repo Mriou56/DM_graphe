@@ -7,14 +7,16 @@ from HexGridViewer import *
 from Cercle import *
 import random
 
-## Dictionary for the area
-dict_area = {'ville': {0: 'dimgray', 1: 'gray', 2: 'darkgray', 3: 'silver', 4: 'darkolivegreen'},
-             'desert': {0: 'sandybrown', 1: 'peru', 2: 'peachpuff', 3: 'navajowhite', 4: 'papayawhip'},
-             'foret': {0: 'darkgreen', 1: 'forestgreen', 2: 'green', 3: 'mediumseagreen', 4: 'palegreen'},
-             'montagne': {0: 'snow', 1: 'linen', 2: 'saddlebrown', 3: 'sienna', 4: 'darkkhaki'},
-             'volcan': {0: 'red', 1: 'orangered', 2: 'darkred', 3: 'saddlebrown', 4: 'black'},
-             'lagon': {0: 'lightseagreen', 1: 'mediumturquoise', 2: 'turquoise', 3: 'aquamarine', 4: 'aquamarine'}}
 
+## Dictionary for the area
+dict_area = {'ville' : {0: 'gray', 1: 'gray', 2: 'gray', 3: 'gray', 4: 'darkolivegreen'},
+             'desert' : {0: 'sandybrown', 1: 'sandybrown', 2:'sandybrown', 3:'sandybrown', 4:'sandybrown'},
+             'foret' : {0:'darkgreen', 1:'forestgreen', 2:'forestgreen', 3:'forestgreen', 4:'forestgreen'},
+             'montagne' : {0:'snow', 1:'linen', 2:'sienna', 3:'sienna', 4:'sienna'},
+             'volcan' : {0:'red', 1:'darkred', 2:'darkred', 3:'saddlebrown', 4:'black'},
+             'lagon' : {0:'turquoise', 1:'turquoise', 2:'turquoise', 3:'turquoise', 4:'aquamarine'}}
+
+dict_dist = { 'ville' : 1, 'desert' : 2, 'foret' : 2, 'montagne':3, 'obsidian': 3 }
 
 class GraphList(Graph):
 
@@ -223,6 +225,7 @@ class GraphList(Graph):
             if v.altitude > max:
                 max = v.altitude
                 v_max = v
+
         return v_max
 
     def find_ListOfhigher(self):
@@ -279,11 +282,7 @@ class GraphList(Graph):
         :type centre: the center vertex
         :param dist: dist of the area
         :param dico: the dictionary of the corresponding area
-        :return: zone (that store list of vertex)
-        en partant d'un sommet,
-        on va chercher à implémenter une zone autour de ce sommet.
-        Cette zone sera de rayon dist. (exemple : si je pars du centre, il faut que je parcoure tous les sommets autours
-        du centre puis les sommets autour des sommets du centre, etc).
+        :return: zone of neighbors
        """
         queue = [(centre, 0)]
         zone=Zone(centre, dist,typeZone, dico)
@@ -413,14 +412,3 @@ class GraphList(Graph):
             return all_maxpaths[0]
         else:
             return all_paths
-
-
-    def createEmbranchementRiviere(self, riviere: list, pointEmbranchment=None):
-        #question c) pas trop capter ce qu'il a voulu dire
-        """
-        if len(riviere) > 0:
-            if pointEmbranchment is None: pointEmbranchment = random.choice(riviere)
-            if pointEmbranchment.altitude > 0:
-                print("Embrachement altitude", pointEmbranchment.altitude)
-                self.riviere(pointEmbranchment)
-            """
