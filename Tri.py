@@ -278,29 +278,18 @@ def dijsktra(graph, s):
     dist = {v: float("inf") for v in graph.vertex()}
     dist[s] = 0
     e = []
-    f = []
-
-    for i in graph.vertex():
-        f.append(i)
+    f = set(graph.vertex())
 
     while len(f) != 0:
-        dist_min = float("inf")
+        si = min(f, key=lambda vert: dist[vert])
+        f.remove(si)
+        e.append(si)
 
-        for si in f:
-            if dist[si] < dist_min:
-                dist_min = dist[si]
-                print(dist_min)
-                vert = si
-
-        # dist[vert] = graph.get_weight(s, vert)
-        f.remove(vert)
-        e.append(vert)
-
-        for sj in graph.succ(vert):
-            print(sj)
-            if dist[sj[0]] > dist[vert] + graph.get_weight(vert, sj[0]):
-                dist[sj[0]] = dist[vert] + graph.get_weight(vert, sj[0])
-                pred[sj[0]] = vert
+        for sj in graph.succ(si):
+            w = graph.get_weight(si, sj[0])
+            if dist[sj[0]] > dist[si] + w:
+                dist[sj[0]] = dist[si] + w
+                pred[sj[0]] = si
 
     return pred
 

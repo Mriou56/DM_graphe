@@ -278,7 +278,7 @@ def carte_dikjrsta(hex_grid, nb_zone, nb_river):
         y = random.randrange(0, hex_grid.get_width())
         v = graphe_grid.get_vertetx(x, y)
         d = random.randrange(1, 5)
-        biome = random.choices(tuple(dict_area.keys()), weights=(9, 3, 5, 4, 2, 2),
+        biome = random.choices(tuple(dict_area.keys()), weights=(9, 1, 1, 1, 1, 1), #(9, 3, 5, 4, 2, 2)
                                k=1)  # weights for the ponderation and k for the len of the list
         zone = graphe_grid.zone2(v, d, biome[0], dict_area[biome[0]])
         zones.append(zone)
@@ -308,16 +308,13 @@ def carte_dikjrsta(hex_grid, nb_zone, nb_river):
 
     # Use the dijkstra algorithme to search the shortest path between two cities
     for v1 in tab_ville:
-        print(v1)
-        # Get the address of the vertex in the graph grid
-        vertex1 = graphe_grid.get_vertetx(*v1.coord)
-
-        # Get the shortest path between two towns in the grid
         tstart = time.time()
-        short = dijsktra(graphe_grid, vertex1)
-        print(time.time() - tstart)
-        for x in range(0,len(short)-1):
-            hex_grid.add_link(short[x].coord, short[x+1].coord, "pink")
+        short = dijsktra(graphe_grid, v1)
+        print('Le temps de parcours de Dijkstra =>', time.time() - tstart)
+
+        print(short)
+        '''for x in range(0,len(short)-1):
+            hex_grid.add_link(short[x].coord, short[x+1].coord, "pink")'''
 
     for v in graphe_grid.vertex():
         # Modification of the color and the opacity of one cell

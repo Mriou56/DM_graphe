@@ -58,7 +58,23 @@ if __name__ == "__main__":
     ## Quel algorithme utiliser pour créer un réseau de routes le moins couteux possible entre x villes, pour qu'elles
     # sont toutes interconnectées ?
 
+    '''g = GraphList(False)
 
+    g.add_vertex((0,1), 'blue', 0.1)
+    g.add_vertex((1, 1), 'blue', 0.1)
+    g.add_vertex((3, 1), 'blue', 0.1)
+    g.add_vertex((3, 2), 'blue', 0.1)
+    v1 = g.get_vertetx(0,1)
+    v2 = g.get_vertetx(1,1)
+    v3 = g.get_vertetx(3,1)
+    v4 = g.get_vertetx(3, 2)
+    g.add_edge(v1, v2, 4)
+    g.add_edge(v1, v3, 5),
+    g.add_edge(v3, v2, 7)
+    g.add_edge(v3, v4, 2)
+    g.add_edge(v1, v4, 1)
+
+    p = g.get_weight(v1, v3)'''
 
     carte_dikjrsta(hex_grid, 5, 10)
 
