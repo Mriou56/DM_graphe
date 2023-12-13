@@ -246,6 +246,7 @@ def kruskal_UF(graph):
     uf = UnionFind()
     T = GraphList(False)
     liste_e = graph.edges()
+
     for v in graph.vertex():
         T.add_vertex(v)
         uf.make_set(v)
@@ -256,7 +257,9 @@ def kruskal_UF(graph):
             T.add_edge(e[0], e[1][0], e[1][1])
             uf.union(e[0], e[1][0])
 
-    T.print()
+    return uf.parents
+
+
 
 
 def relachment(s1, s2):
@@ -292,6 +295,15 @@ def dijsktra(graph, s):
                 pred[sj[0]] = si
 
     return pred
+
+def chemin_dijkstra(dic, s):
+    list_final = [s]
+    vert = s
+
+    while dic[vert] != None:
+        list_final.append(dic[vert])
+        vert = dic[vert]
+    return list_final
 
 
 def bellman_ford(graph, s):

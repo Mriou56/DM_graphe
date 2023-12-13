@@ -256,7 +256,7 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
 
 def carte_dikjrsta(hex_grid, nb_zone, nb_river):
     """
-    Show a card with the shortest path between each cities
+    Show a card with the shortest path between each city
     :param hex_grid:
     :param nb_zone: the number of area we want in the graph
     :param nb_river: the number of rivers we want in the grid
@@ -307,11 +307,89 @@ def carte_dikjrsta(hex_grid, nb_zone, nb_river):
                 graphe_grid.remove_edge(v, v2, dist)
 
     # Use the dijkstra algorithme to search the shortest path between two cities
+    for v1 in tab_ville:
+        for v2 in tab_ville:
+            if v1 != v2:
+                tstart = time.time()
+                short = dijsktra(graphe_grid, v1)
+                print('Le temps de parcours de Dijkstra =>', time.time() - tstart)
+                list_short = chemin_dijkstra(short, v2)
+
+
+                for x in range(0, len(list_short) - 1):
+                    hex_grid.add_link(list_short[x].coord, list_short[x + 1].coord, "black")
+
+    for v in graphe_grid.vertex():
+        # Modification of the color and the opacity of one cell
+        hex_grid.add_color(v)
+        hex_grid.add_alpha(v)
+
+    hex_grid.show(alias={"royalblue": "water", "snow": "snow", "gray": "town", "sandybrown": "desert",
+                         "darkolivegreen": "périphérie",
+                         "darkgreen": "foret", "forestgreen": "foret", "linen": "montagne", "sienna": "montagne",
+                         "red": "lava",
+                         "darkred": "lava", "saddlebrown": "obscidian", "black": "obsidian", "turquoise": "lagon",
+                         "green": "grass"},
+                  debug_coords=False)
+
+def carte_kruskal(hex_grid, nb_zone, nb_river):
+    """
+    Show a card with the shortest path between each city
+    :param hex_grid:
+    :param nb_zone: the number of area we want in the graph
+    :param nb_river: the number of rivers we want in the grid
+    :return:
+    """
+    tab_ville = []
+    # Creation of a graph - all is green
+    graphe_grid = GraphList(True)
+
+    for i in range(0, hex_grid.get_width()):
+        for j in range(0, hex_grid.get_height()):
+            t = 'green'
+            alt = random.uniform(0.2, 0.5)
+            graphe_grid.add_vertex((i, j), t, alt)
+
+    zones = []
+    for n in range(0, nb_zone):
+        x = random.randrange(0, hex_grid.get_width())
+        y = random.randrange(0, hex_grid.get_width())
+        v = graphe_grid.get_vertetx(x, y)
+        d = random.randrange(1, 5)
+        biome = random.choices(tuple(dict_area.keys()), weights=(9, 1, 1, 1, 1, 1), #(9, 3, 5, 4, 2, 2)
+                               k=1)  # weights for the ponderation and k for the len of the list
+        zone = graphe_grid.zone2(v, d, biome[0], dict_area[biome[0]])
+        zones.append(zone)
+        # graphe_grid.zone2(v, d, dict_area[biome[0]])
+
+        if biome[0] == 'ville':
+            hex_grid.add_symbol(*v.coord, Circle("red"))
+            tab_ville.append(v)
+
+    # Creation of the rivers
+    for n in range(0, nb_river):
+        x = random.randrange(0, hex_grid.get_width())
+        y = random.randrange(0, hex_grid.get_height())
+        v = graphe_grid.get_vertetx(x, y)
+        graphe_grid.riviere(v)
+
+    # add edge (arrête) entre les Vertex
+    for v in graphe_grid.vertex():
+        # Add edges between vertex of the graph
+        list = graphe_grid.get_neighbour(v)
+        for v2 in list:
+            dist = dict_dist[v2.terrain] + (v.altitude - v2.altitude)
+            graphe_grid.add_edge(v, v2, dist)
+            # Verification of the practicality of the terrain
+            if v.terrain == 'royalblue' or v.terrain == 'red' or v.terrain == 'turquoise':
+                graphe_grid.remove_edge(v, v2, dist)
+
+    # Use the kruskal algorithme to search the shortest path between two cities
     print(tab_ville)
     for v1 in tab_ville:
         tstart = time.time()
-        short = dijsktra(graphe_grid, v1)
-        print('Le temps de parcours de Dijkstra =>', time.time() - tstart)
+        short = kruskal_UF(graphe_grid)
+        print('Le temps de parcours de Kruskal =>', time.time() - tstart)
 
         print(short)
         for k in short.keys():
