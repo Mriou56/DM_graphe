@@ -143,8 +143,8 @@ class HexGridViewer:
                     if show_altitude:
                         # alpha = altitude of Vertex
                         # *10 to improve the visibility of altitude in the graph
-                        #text_altitude = f"{int(self.__alpha[(row, col)] * 10)}"
-                        text_altitude = f"{float(self.__alpha[(row, col)] )}"
+                        text_altitude = f"{int(self.__alpha[(row, col)] * 10)}"
+                        #text_altitude = f"{float(self.__alpha[(row, col)] )}"
                         ax.annotate(text_altitude, xy=center, ha='center', va='center', fontsize=6, color='black')
 
                 # ajoute l'hexagone

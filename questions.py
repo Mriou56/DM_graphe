@@ -170,8 +170,9 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
         max_distance = int(hex_grid.get_width() / 4)
     if max_distance < 2:
         max_distance = 2
-        
+
     # Creation of a graph - all is green
+    # positionnement zone de plaine dans le Graph
     graphe_grid = GraphList(False)
     for i in range(0, hex_grid.get_width()):
         for j in range(0, hex_grid.get_height()):
@@ -205,8 +206,9 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
         x = random.randrange(0, hex_grid.get_width())
         y = random.randrange(0, hex_grid.get_width())
         v = graphe_grid.get_vertetx(x, y)
-        d = random.randrange(1, 5)
-        biome = random.choices(tuple(dict_area.keys()), weights=(9,3,5,4,2,2), k=1) # weights for the ponderation and k for the len of the list
+        d = random.randrange(1, max_distance)
+        # random with weight to define the type of biome (villes ou desert ...)
+        biome = random.choices(tuple(dict_area.keys()), weights=(9,3,5,4,2,2), k=1)
         zone = graphe_grid.zone2(v, d, biome[0], dict_area[biome[0]])
         zones.append(zone)
         #graphe_grid.zone2(v, d, dict_area[biome[0]])

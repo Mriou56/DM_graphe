@@ -293,7 +293,7 @@ class GraphList(Graph):
 
         while queue:
             current_vertex, current_distance = queue.pop(0) # queue.pop(0)
-            current_vertex.terrain = zone.areaDicoType[current_distance % 6]
+            current_vertex.terrain = zone.areaDicoType[current_distance % 4]
             if zone.typeZone == 'ville' or zone.typeZone == 'foret':
                 current_vertex.altitude = random.uniform(0.3, 0.6)
             else:
