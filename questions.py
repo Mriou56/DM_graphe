@@ -215,13 +215,9 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
             hex_grid.add_symbol(*v.coord, Circle("red"))
             tab_ville.append(v)
 
-    # Creation of a subgraph with all the town
-    graphe_ville = GraphList(False)
-    for v in tab_ville:
-        graphe_ville.add_vertex(v.coord, v.terrain, v.altitude)
 
-    for v1 in graphe_ville.vertex():
-        for v2 in graphe_ville.vertex():
+    for v1 in tab_ville:
+        for v2 in tab_ville:
             # Get the address of the vertex in the graph grid
             vertex1 = graphe_grid.get_vertetx(*v1.coord)
             vertex2 = graphe_grid.get_vertetx(*v2.coord)
@@ -256,14 +252,15 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
                          "darkred": "lava", "saddlebrown": "obscidian", "black": "obsidian", "turquoise": "lagon", "green":"grass"},
                   debug_coords=False)
 
-def carte_dikjrsta(hex_grid, nb_ville, nb_river):
+def carte_dikjrsta(hex_grid, nb_zone, nb_river):
     """
-
+    Show a card with the shortest path between each cities
     :param hex_grid:
-    :param nb_ville:
-    :param nb_river:
+    :param nb_zone: the number of area we want in the graph
+    :param nb_river: the number of rivers we want in the grid
     :return:
     """
+    tab_ville = []
     # Creation of a graph - all is green
     graphe_grid = GraphList(True)
 
@@ -273,10 +270,62 @@ def carte_dikjrsta(hex_grid, nb_ville, nb_river):
             alt = random.uniform(0.2, 0.5)
             graphe_grid.add_vertex((i, j), t, alt)
 
+    zones = []
+    for n in range(0, nb_zone):
+        x = random.randrange(0, hex_grid.get_width())
+        y = random.randrange(0, hex_grid.get_width())
+        v = graphe_grid.get_vertetx(x, y)
+        d = random.randrange(1, 5)
+        biome = random.choices(tuple(dict_area.keys()), weights=(9, 3, 5, 4, 2, 2),
+                               k=1)  # weights for the ponderation and k for the len of the list
+        zone = graphe_grid.zone2(v, d, biome[0], dict_area[biome[0]])
+        zones.append(zone)
+        # graphe_grid.zone2(v, d, dict_area[biome[0]])
+
+        if biome[0] == 'ville':
+            hex_grid.add_symbol(*v.coord, Circle("red"))
+            tab_ville.append(v)
+
+    # Creation of the rivers
+    for n in range(0, nb_river):
+        x = random.randrange(0, hex_grid.get_width())
+        y = random.randrange(0, hex_grid.get_height())
+        v = graphe_grid.get_vertetx(x, y)
+        graphe_grid.riviere(v)
+
     # add edge (arrête) entre les Vertex
     for v in graphe_grid.vertex():
         # Add edges between vertex of the graph
         list = graphe_grid.get_neighbour(v)
         for v2 in list:
-            graphe_grid.add_edge(v, v2)
+            dist = dict_dist[v2.terrain] + (v.altitude - v2.altitude)
+            graphe_grid.add_edge(v, v2, dist)
+            # Verification of the practicality of the terrain
+            if v.terrain == 'royalblue' or v.terrain == 'red' or v.terrain == 'turquoise':
+                graphe_grid.remove_edge(v, v2, dist)
 
+    # Use the dijkstra algorithme to search the shortest path between two cities
+    for v1 in tab_ville:
+        print(v1)
+        # Get the address of the vertex in the graph grid
+        vertex1 = graphe_grid.get_vertetx(*v1.coord)
+
+        # Get the shortest path between two towns in the grid
+        tstart = time.time()
+        short = dijsktra(graphe_grid, vertex1)
+        print(time.time() - tstart)
+        for x in range(0,len(short)-1):
+            hex_grid.add_link(short[x].coord, short[x+1].coord, "pink")
+
+    for v in graphe_grid.vertex():
+        # Modification of the color and the opacity of one cell
+        hex_grid.add_color(v)
+        hex_grid.add_alpha(v)
+
+    hex_grid.show(alias={"royalblue": "water", "snow": "snow", "gray": "town", "sandybrown": "desert",
+                         "darkolivegreen": "périphérie",
+                         "darkgreen": "foret", "forestgreen": "foret", "linen": "montagne", "sienna": "montagne",
+                         "red": "lava",
+                         "darkred": "lava", "saddlebrown": "obscidian", "black": "obsidian", "turquoise": "lagon",
+                         "green": "grass"},
+                  debug_coords=False)

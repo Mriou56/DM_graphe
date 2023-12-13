@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     # Algo pour faire une carte jolie
 
-    carte(hex_grid, 5, 10)
+    #carte(hex_grid, 5, 10)
     """
     Tests de temps
     Grille 15x15 et 5 villes => 0.004   et 10 villes => 004
@@ -57,5 +57,10 @@ if __name__ == "__main__":
 
     ## Quel algorithme utiliser pour créer un réseau de routes le moins couteux possible entre x villes, pour qu'elles
     # sont toutes interconnectées ?
+
+
+
+    carte_dikjrsta(hex_grid, 5, 10)
+
 
 

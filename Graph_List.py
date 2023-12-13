@@ -12,11 +12,12 @@ import random
 dict_area = {'ville' : {0: 'gray', 1: 'gray', 2: 'gray', 3: 'gray', 4: 'darkolivegreen'},
              'desert' : {0: 'sandybrown', 1: 'sandybrown', 2:'sandybrown', 3:'sandybrown', 4:'sandybrown'},
              'foret' : {0:'darkgreen', 1:'forestgreen', 2:'forestgreen', 3:'forestgreen', 4:'forestgreen'},
-             'montagne' : {0:'snow', 1:'linen', 2:'sienna', 3:'sienna', 4:'sienna'},
+             'montagne' : {0:'snow', 1:'sienna', 2:'sienna', 3:'sienna', 4:'sienna'},
              'volcan' : {0:'red', 1:'darkred', 2:'darkred', 3:'saddlebrown', 4:'black'},
-             'lagon' : {0:'turquoise', 1:'turquoise', 2:'turquoise', 3:'turquoise', 4:'aquamarine'}}
+             'lagon' : {0:'turquoise', 1:'turquoise', 2:'turquoise', 3:'turquoise', 4:'turquoise'}}
 
-dict_dist = { 'ville' : 1, 'desert' : 2, 'foret' : 2, 'montagne':3, 'obsidian': 3 }
+dict_dist = { 'gray' : 1, 'darkolivegreen':1, 'sandybrown' : 2, 'forestgreen' : 2, 'darkgreen' : 2, 'sienna':3, 'black': 2,
+              'snow':4, 'darkred':4, 'saddlebrown': 3, 'green': 1, 'royalblue': 0, 'red': 0, 'turquoise':0}
 
 class GraphList(Graph):
 
@@ -28,9 +29,9 @@ class GraphList(Graph):
     def add_edge(self, vertex1: Vertex, vertex2: Vertex, label=None):
         """To add a new edge to the graph"""
         if label is not None:
-            self.graph_dict[vertex1.coord].append((vertex2.coord, label))
+            self.graph_dict[vertex1].append((vertex2, label))
             if not self.directed:
-                self.graph_dict[vertex2.coord].append((vertex1.coord, label))
+                self.graph_dict[vertex2].append((vertex1, label))
 
         else:
             self.graph_dict[vertex1].append(vertex2)
@@ -51,9 +52,9 @@ class GraphList(Graph):
     def has_edge(self, vertex1: Vertex, vertex2: Vertex, label=None):
         """Say if an edge between two vertex exist"""
         if label is not None:
-            return (vertex2.coord, label) in self.graph_dict[vertex1.coord]
+            return (vertex2, label) in self.graph_dict[vertex1]
         else:
-            return vertex2.coord in self.graph_dict[vertex1.coord]
+            return vertex2 in self.graph_dict[vertex1]
 
     def vertex(self):
         """Return the dict where we have a list of all the vertex of a graph"""
@@ -126,14 +127,14 @@ class GraphList(Graph):
         :return: None
         """
         if label is not None:
-            self.graph_dict[vertex1.coord].remove((vertex2.coord, label))
+            self.graph_dict[vertex1].remove((vertex2, label))
             if not self.directed:
-                self.graph_dict[vertex2.coord].remove((vertex1.coord, label))
+                self.graph_dict[vertex2].remove((vertex1, label))
 
         else:
-            self.graph_dict[vertex1.coord].remove(vertex2.coord)
+            self.graph_dict[vertex1].remove(vertex2)
             if not self.directed:
-                self.graph_dict[vertex2.coord].remove(vertex1.coord)
+                self.graph_dict[vertex2].remove(vertex1)
 
     def get_weight(self, vertex1: Vertex, vertex2: Vertex):
         """
@@ -143,10 +144,9 @@ class GraphList(Graph):
         :return: The weight of the edge
         """
         tab_edge = self.edges()
-        for e1, succs in tab_edge:
-            for e2, label in succs:
-                if (e1, e2) == (vertex1, vertex2):
-                    return label
+        for v1, v2 in tab_edge:
+            if (v1.coord, v2[0].coord) == (vertex1.coord, vertex2.coord):
+                    return v2[1]
         raise Exception(f"vertex doen'st exists : ({vertex1}, {vertex2})")
 
     def get_neighbourold(self, x, y):
