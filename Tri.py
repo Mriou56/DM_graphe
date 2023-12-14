@@ -9,33 +9,33 @@ class UnionFind:
     def __init__(self):
         self.parents = {}
 
-    def make_set(self, x):
+    def make_set(self, v):
         """
-        :param x: a vertex
+        :param v: a vertex
         :return: None
         """
-        self.parents[x] = None
+        self.parents[v] = None
 
-    def find(self, x):
+    def find(self, v):
         """
-        :param x: a vertex
+        :param v: a vertex
         :return: The root of the vertex
         """
-        if self.parents[x] == None:
-            return x
+        if self.parents[v] == None:
+            return v
         else:
-            return self.find(self.parents[x])
+            return self.find(self.parents[v])
 
-    def union(self, x, y):
+    def union(self, v1, v2):
         """
-        :param x: a vertex
-        :param y: a vertex
+        :param v1: a vertex
+        :param v2: a vertex
         :return: None
         """
-        x_root = self.find(x)
-        y_root = self.find(y)
-        if x_root != y_root:
-            self.parents[x_root] = y_root
+        v1_root = self.find(v1)
+        v2_root = self.find(v2)
+        if v1_root != v2_root:
+            self.parents[v1_root] = v2_root
 
 
 ### Sorting function ######
@@ -248,18 +248,30 @@ def kruskal_UF(graph):
     liste_e = graph.edges()
 
     for v in graph.vertex():
-        T.add_vertex(v)
+        T.add_vertex(v.coord, v.terrain, v.altitude)
         uf.make_set(v)
 
+    print(liste_e)
     liste_e.sort(key=lambda x: (x[1][1]))
     for e in liste_e:
         if uf.find(e[0]) != uf.find(e[1][0]):
-            T.add_edge(e[0], e[1][0], e[1][1])
+            v1 = T.get_vertetx(e[0].coord[0], e[0].coord[1])
+            v2 = T.get_vertetx(e[1][0].coord[0], e[1][0].coord[1])
+            T.add_edge(v1, v2, e[1][1])
             uf.union(e[0], e[1][0])
 
     return uf.parents
 
+def chemin_kruskal(dic, sd, sa):
+    list_final = [sa]
+    vert = sa
 
+    while dic[vert] != sd and dic[vert] != None:
+        list_final.append(dic[vert])
+        vert = dic[vert]
+
+    list_final.append(sd)
+    return list_final
 
 
 def relachment(s1, s2):

@@ -48,6 +48,14 @@ class GraphList(Graph):
         """
         v = Vertex(coord, terrain, alt)
         self.graph_dict[v] = []
+    def edges(self):
+        """Return a tuple list which match with the two vertex of one edge with all the edges of the graph"""
+        list_e = []
+        for key in self.graph_dict:
+            for v in self.graph_dict[key]:
+                list_e.append((key, v))
+
+        return list_e
 
     def has_edge(self, vertex1: Vertex, vertex2: Vertex, label=None):
         """Say if an edge between two vertex exist"""

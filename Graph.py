@@ -34,22 +34,10 @@ class Graph(ABC):
         """Return the degree of a vertex"""
         return len(self.adj(vertex))
 
+    @abstractmethod
     def edges(self):
         """Return a tuple list which match with the two vertex of one edge with all the edges of the graph"""
-        """Peut-être prendre la mienne a l'avenir qui est tout de même plus optimisé"""
-        list_v = self.vertex()
-        list_e = []
-        list_l = self.label()
-        for i in list_v:
-            for j in list_v:
-                if self.has_edge(i, j):
-                    list_e.append((i, j))
-                if list_l is not None:
-                    for h in list_l:
-                        if self.has_edge(i, j, h) and (i, (j, h)) not in list_e:
-                            list_e.append((i, (j, h)))
-
-        return list_e
+        pass
 
     @abstractmethod
     def has_edge(self, vertex1, vertex2, label=None):
