@@ -77,7 +77,8 @@ if __name__ == "__main__":
 
     p = g.get_weight(v1, v3)'''
 
-    carte_dikjrsta(hex_grid, 15, 10)
+    #carte_dikjrsta(hex_grid, 5, 10)
+    carte_kruskal(hex_grid, 5, 10)
 
 
 

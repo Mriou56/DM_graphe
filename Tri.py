@@ -251,7 +251,6 @@ def kruskal_UF(graph):
         T.add_vertex(v.coord, v.terrain, v.altitude)
         uf.make_set(v)
 
-    print(liste_e)
     liste_e.sort(key=lambda x: (x[1][1]))
     for e in liste_e:
         if uf.find(e[0]) != uf.find(e[1][0]):
@@ -301,10 +300,11 @@ def dijsktra(graph, s):
         e.append(si)
 
         for sj in graph.succ(si):
-            w = graph.get_weight(si, sj[0])
-            if dist[sj[0]] > dist[si] + w:
-                dist[sj[0]] = dist[si] + w
-                pred[sj[0]] = si
+            if isinstance(sj, tuple):
+                w = graph.get_weight(si, sj[0])
+                if dist[sj[0]] > dist[si] + w:
+                    dist[sj[0]] = dist[si] + w
+                    pred[sj[0]] = si
 
     return pred
 
