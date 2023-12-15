@@ -367,7 +367,7 @@ def carte_kruskal(hex_grid, nb_zone, nb_river):
         y = random.randrange(0, hex_grid.get_width())
         v = graphe_grid.get_vertetx(x, y)
         d = random.randrange(1, 5)
-        biome = random.choices(tuple(dict_area.keys()), weights=(9, 1, 1, 1, 1, 1),  # (9, 3, 5, 4, 2, 2)
+        biome = random.choices(tuple(dict_area.keys()), weights=(9, 3, 5, 4, 2, 2),
                                k=1)  # weights for the ponderation and k for the len of the list
         zone = graphe_grid.zone2(v, d, biome[0], dict_area[biome[0]])
         zones.append(zone)
@@ -425,12 +425,16 @@ def carte_kruskal(hex_grid, nb_zone, nb_river):
 
                 gville.add_edge(ville1, ville2, w)
 
+    # Use the kruskal algorithme to search the shortest path between two cities
+    tstart = time.time()
     cheminK = kruskal_UF(gville)
-    print(cheminK)
+    print('Le temps de parcours de Kruskal =>', time.time() - tstart)
+
+    #print(cheminK)
     for k, v in cheminK.items():
         if v is not None:
-            for e in dict_chemin[(k,v)]:
-                print(e)
+            for e in range (0, len(dict_chemin[(k,v)])-1):
+                hex_grid.add_link(dict_chemin[(k,v)][e].coord, dict_chemin[(k,v)][e + 1].coord, "purple")
 
 
 
