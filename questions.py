@@ -212,6 +212,7 @@ def carte_withConstraint(hex_grid: HexGridViewer, nbRivers, nbZonesVolcan, nbZon
         zone = graphe_grid.zone2(v, d, biome[0], dict_area_withoutVilleAndVolcan[biome[0]])
         zones.append(zone)
 
+
     # Add the Zone villes
     # -------------------
     # list of all Vertex where we have a ville - avoid to have villes l'une sur l'autre, elles peuvent être voisine
