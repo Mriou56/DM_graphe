@@ -208,41 +208,59 @@ class Zone():
         self.areaDicoType = areaDicoType
 ```
 
+Grâce à cela nous pouvons retourver facilement le centre de la zone (vertex centre), la taille de son rayon (distance) et
+le dictionnaire de couleur correpondant au type de la zone (typeZone).
+
 ## Question 5:
-Pour créer une rivière, nous recherchons les points les plus hauts de la grille à l'aide de la fonction find_higher puis à l'aide d'un code DFS nous cherchons le chemin le plus long à partir de ces sommets
+Pour créer une rivière, nous recherchons les points les plus hauts de la grille à l'aide de la fonction find_higher puis
+à l'aide d'un code DFS nous cherchons le chemin le plus long à partir de ces sommets
 
 Concernant les embranchements si deux rivères se rejoignent, elles vont juste devenir une seule rivière
 
 ## Qustion 6:
-Pour ajouter de la logique à notre carte, nous avons créé des zones ayant des altitudes dans un intervalle défini qui varie faiblement d'un voisin à l'autre  que nous ajoutons sur notre carte qui à également des sommets d'altitudes aléatoire
+Pour ajouter de la logique à notre carte, nous avons créé des zones ayant des altitudes dans un intervalle défini qui varie
+faiblement d'un voisin à l'autre que nous ajoutons sur notre carte qui à également des sommets d'altitudes aléatoire
+Ces altitudes varient d'une valeur comprise dans un intervalle compris entre 0 et 0,2.
 
 ## Question 7 :
-Pour trouver le chemin le plus rapide entre 2 villes, nous utilisons la fonction pcc qui determine le plus court chemin entre deux sommets quand nous n'avons pas de contraintes de pondération.
-Il s'agit d'un algorithme ayant une complexité temporelle en O(|S|+|A|) avec S le nombre de sommets du graphe et A le nombre d'arrêtes.
+Pour trouver le chemin le plus rapide entre 2 villes, nous utilisons la fonction pcc qui determine le plus court chemin 
+entre deux sommets quand nous n'avons pas de contraintes de pondération.
+Il s'agit d'un algorithme ayant une complexité temporelle en O(|S|+|A|) avec S le nombre de sommets du graphe et A le nombre
+d'arrêtes.
 
 Voici le tableau avec la compexité temporelle en fonction du nombre de villes et de la taille de la grille :
 
 ![img_1.png](img_1.png)
 
 ## Question 8:
-Maintenant, nous pouvons pondérer les arêtes en fonction du type de terrain. Pour se faire nous prenons le poids du type de terrain d'arrivé, prédéfini dans le dictionnaire:
+Maintenant, nous pouvons pondérer les arêtes en fonction du type de terrain. Pour se faire nous prenons le poids du type
+de terrain d'arrivée, prédéfini dans le dictionnaire :
 ```python
 dict_dist = { 'gray' : 1, 'darkolivegreen':1, 'sandybrown' : 2, 'forestgreen' : 2, 'darkgreen' : 2, 'sienna':3, 'black': 2,
               'snow':4, 'darkred':4, 'saddlebrown': 3, 'green': 1, 'royalblue': 50, 'red': 50, 'turquoise': 50}
 ``` 
-à cette valeur, nous ajoutons la différence d'altitude entre les deux sommets pour obtenir des poids propres à chaque arête.
-Pour empecher les chemins de passer par les rivières, il faut supprimer les arrêtes des sommets par lesquels passent une rivière ou une zone aquatique. Il faut également empêcher les passage dans la lave en utilisant la même méthode.
+À cette valeur, nous ajoutons la différence d'altitude entre les deux sommets pour obtenir des poids propres à chaque arête.
+Pour empecher les chemins de passer par les rivières, il faut supprimer les arrêtes des sommets par lesquels passent une rivière
+ou une zone aquatique. Il faut également empêcher le passage dans la lave en utilisant la même méthode.
 
-Nous utilie
-Voici un tableau pour représenter la complexité temporelle en fonction du nombre de villes et la taille de la grille :
+Nous utilisons l'alorithme de Dijkstra pour trouver le chemin le plus court entre deux villes en prennant en compte la pondération
+de chaque arête.
+
+Voici un tableau pour représenter la complexité temporelle de l'algorithme de Dijkstra en fonction du nombre de villes 
+et la taille de la grille :
 ![img_2.png](img_2.png)
 
 ## Question 9:
-Pour créer ce réseau le mieux est d'utiliser l'algorithme de Kruskal.
-Nous avons rencontré de nombreuses difficultés lors de l'implémentation de cet algorithme dans notre code en le liant avec la grille et en utilisant la classe vertex qui contient toutes les informations sur un sommet.
-Nous avons dans un premier temps eu du mal, car les arrêtés ne s'affichaient pas uniquement avec des sommets voisins mais avec des sommets d'un côté à l'autre de la carte.
-Ensuite le plus gros problème que nous avons rencontré est le fait que certaines arêtes présentes sur le chemin disparaissaient nous empêchant de determine le chemin en entier entre deux villes. Ce problème de disparition d'arrêtes 
-est certainement lié au fait que nous supprimons les arrêtes passant dans les rivières et que nous n'avions pas encore enlever le fait qu'une ville puisse apparaitre dans un rivère.
+Pour créer ce réseau, la solution la plus logique pour nous est d'utiliser l'algorithme de Kruskal.
+Nous avons rencontré de nombreuses difficultés lors de l'implémentation de cet algorithme dans notre code en le liant avec
+la grille et en utilisant la classe vertex qui contient toutes les informations sur un sommet.
+
+Nous avons dans un premier temps eu du mal, car les arrêtés ne s'affichaient pas uniquement avec des sommets voisins mais
+avec des sommets d'un côté à l'autre de la carte.
+Ensuite le plus gros problème que nous avons rencontré est le fait que certaines arêtes présentes sur le chemin disparaissaient
+nous empêchant de determine le chemin en entier entre deux villes. Ce problème de disparition d'arrêtes est certainement 
+lié au fait que nous supprimons les arrêtes passant dans les rivières et que nous n'avions pas encore enlever le fait qu'une
+ville puisse apparaitre dans une rivère.
 
 ## Question 10:
 

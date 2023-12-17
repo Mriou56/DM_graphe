@@ -33,7 +33,7 @@ if __name__ == "__main__":
 
     # build a map with constraint
     # nb Zone that we would like to add: nbRivers (max), nbZonesVolcan (max), nbZonesVilles, nbOtherZonesMax, maxDistance
-    carte_withConstraint(hex_grid, 2, 2, 2, 5, 4)
+    #carte_withConstraint(hex_grid, 2, 2, 2, 5, 4)
 
     # Create a map with the dijkstra algorithm to show the shortest route between cities
 
