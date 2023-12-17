@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     #carte_old(hex_grid, 5, 10)
 
-    # build a map with constraint
+    # Function to build a ligical map with constraint
     # nb Zone that we would like to add: nbRivers (max), nbZonesVolcan (max), nbZonesVilles, nbOtherZonesMax, maxDistance
     #carte_withConstraint(hex_grid, 2, 2, 2, 5, 4)
 
