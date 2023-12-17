@@ -235,40 +235,37 @@ class GraphList(Graph):
 
         return v_final
 
-    def find_higher(self, liste):
+    def find_higher(self, liste: list):
         """
-        Get the higher vertex of the graph if several return a list
+        Get the higher vertex of the liste if several return a list
         :return:
         """
         # convert the dictionary items in a list and get the 1st items
-        v_max = liste[0]
-        max = v_max.altitude
-        for v in self.vertex():
-            if v.altitude > max:
-                max = v.altitude
-                v_max = v
+        if (len(liste) > 0):
+            v_max = liste[0]
+            max = v_max.altitude
+            for v in liste:       #self.vertex():
+                if v.altitude > max:
+                    max = v.altitude
+                    v_max = v
 
-        return v_max
+            return v_max
+        else:
+            return None
 
-
-    def find_ListOfhigher(self, liste):
+    def find_ListOfhigher(self, liste: list):
         """
-        Get the list of higher vertex of the graph (same altitude)
+        Get the list of higher vertex of the liste (same altitude)
         :return:
         """
         v_max = self.find_higher(liste)
         mmax = [v_max]
-        lVectWithoutOne = liste
-        #   nb = 0
-        #   nb2 = 0
+       # lVectWithoutOne = liste
         # loop to search all vertex with same altitude and add it in a list
-        for v in lVectWithoutOne:
-            #     nb2 = nb2 + 1
+        for v in liste:
             if v.altitude == v_max.altitude:
-                #    nb = nb + 1
                 if v not in mmax:
                     mmax.add(v)
-                    #   nb = nb + 1
         return mmax
 
 
@@ -294,7 +291,8 @@ class GraphList(Graph):
         # search the max
         # we have a vertex that has the max altitude and is not in zone exclude
         listResult.append(v_max)
-        ListVertexNotExlude.remove(v_max)
+        if v_max in ListVertexNotExlude:
+            ListVertexNotExlude.remove(v_max)
         cpt = cpt + 1
         if nbRivers == cpt:
             return listResult
@@ -426,7 +424,7 @@ class GraphList(Graph):
                 return None
         else:
             ListVertexNotExlude = ListVertexNotExlude + listVertex
-
+        from random import randrange
         vertZone = ListVertexNotExlude[randrange(len(ListVertexNotExlude))]
 
         visited = set()

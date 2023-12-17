@@ -228,7 +228,7 @@ def carte_withConstraint(hex_grid: HexGridViewer, nbRivers, nbZonesVolcan, nbZon
         if zone is None:
             nbVilleCreated = nbZonesVilles
         else:
-            nbVilleCreated = nbZoneCreated + 1
+            nbVilleCreated = nbVilleCreated + 1
             listVertexInzone = zone.returnOnlyTheVertexs()
             listVertexToBeExluded = listVertexToBeExluded + listVertexInzone
             # add the listVertexInTheZone of this zone in the listVertexVilles
