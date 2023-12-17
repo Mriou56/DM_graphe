@@ -214,7 +214,7 @@ Pour créer une rivière, nous recherchons les points les plus hauts de la grill
 Concernant les embranchements si deux rivères se rejoignent, elles vont juste devenir une seule rivière
 
 ## Qustion 6:
-Pour ajouter de la logique à notre carte, nous avons créé des zones ayant des altitudes dans un intervalle défini qui varie faiblement d'un voisin à l'autre  que nous ajoutons sur notre crate qui à également des sommets d'altitudes aléatoire
+Pour ajouter de la logique à notre carte, nous avons créé des zones ayant des altitudes dans un intervalle défini qui varie faiblement d'un voisin à l'autre  que nous ajoutons sur notre carte qui à également des sommets d'altitudes aléatoire
 
 ## Question 7 :
 Pour trouver le chemin le plus rapide entre 2 villes, nous utilisons la fonction pcc qui determine le plus court chemin entre deux sommets quand nous n'avons pas de contraintes de pondération.
@@ -233,7 +233,8 @@ dict_dist = { 'gray' : 1, 'darkolivegreen':1, 'sandybrown' : 2, 'forestgreen' : 
 à cette valeur, nous ajoutons la différence d'altitude entre les deux sommets pour obtenir des poids propres à chaque arête.
 Pour empecher les chemins de passer par les rivières, il faut supprimer les arrêtes des sommets par lesquels passent une rivière ou une zone aquatique. Il faut également empêcher les passage dans la lave en utilisant la même méthode.
 
-Voici un tableau pour représenter la complexité temporelle en fonction du nombre de ville et la taille de la grille:
+Nous utilie
+Voici un tableau pour représenter la complexité temporelle en fonction du nombre de villes et la taille de la grille :
 ![img_2.png](img_2.png)
 
 ## Question 9:
