@@ -220,6 +220,7 @@ def carte_withConstraint(hex_grid: HexGridViewer, nbRivers, nbZonesVolcan, nbZon
     nbVilleCreated = 0
     listVertexInzone = []
     nbZoneCreated = 0
+
     while nbVilleCreated < nbZonesVilles:
         d = random.randrange(1, maxDistance)  # 4
         zone = graphe_grid.zoneBuildWithConstraint(d, 'ville', listVertexToBeExluded, dict_ville)
@@ -236,19 +237,10 @@ def carte_withConstraint(hex_grid: HexGridViewer, nbRivers, nbZonesVolcan, nbZon
             hex_grid.add_symbol(*v.coord, Circle("red"))
             tab_ville.append(v)
 
-    # Buid the ville inside the "Ville" Zone
-    for v1 in tab_ville:
-        for v2 in tab_ville:
-            # Get the address of the vertex in the graph grid
-            vertex1 = graphe_grid.get_vertetx(*v1.coord)
-            vertex2 = graphe_grid.get_vertetx(*v2.coord)
 
-            # Get the shortest path between two towns in the grid
-            # tstart = time.time()
-            short = pcc(graphe_grid, vertex1, vertex2)
-            # print(time.time() - tstart)
-            for x in range(0, len(short) - 1):
-                hex_grid.add_link(short[x].coord, short[x + 1].coord, "purple")
+
+    #list used to build later the path, it will store all vertex where we can't put a path (volcan, rivier)
+    listVertexToExcludeForPaths = []
 
     # build the volcan Zone (outside Ville zone and other volcan zone)
     # --------------
@@ -283,9 +275,26 @@ def carte_withConstraint(hex_grid: HexGridViewer, nbRivers, nbZonesVolcan, nbZon
     else:
         print("Not possible to add a river")
 
+    # add in listVertexToExcludeForPaths the rivieres
+
     for riv in rivieresWithConstraint:
         for vert in riv:
-            listVertexEcludeForPath.append(vert)
+            listVertexToExcludeForPaths.append(vert)
+
+
+    # Buid the path - ville inside the "Ville" Zone
+    for v1 in tab_ville:
+        for v2 in tab_ville:
+            # Get the address of the vertex in the graph grid
+            vertex1 = graphe_grid.get_vertetx(*v1.coord)
+            vertex2 = graphe_grid.get_vertetx(*v2.coord)
+
+            # Get the shortest path between two towns in the grid
+            # tstart = time.time()
+            short = pcc(graphe_grid, vertex1, vertex2)
+            # print(time.time() - tstart)
+            for x in range(0, len(short) - 1):
+                hex_grid.add_link(short[x].coord, short[x + 1].coord, "purple")
 
     # End of treatment - add colors...
     # -------------------

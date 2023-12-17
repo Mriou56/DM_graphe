@@ -495,7 +495,7 @@ class GraphList(Graph):
 
             for v in listVertNeigbour:
                 if v.altitude <= vert.altitude:
-                    if vert not in ListVertexToBeExluded:
+                    if v not in ListVertexToBeExluded:
                         ListVertexToBeExluded.append(vert)
                         t_path = path + [v]
                         paths_node.append(tuple(t_path))
@@ -529,6 +529,8 @@ class GraphList(Graph):
                 #  take only the 1st path (same if we have several path with the same length)
                 for v in all_maxpaths[0]:
                     v.terrain = 'royalblue'
+                    if v not in listVertMaxAltitude:
+                        ListVertexToBeExluded.append(v) # pour éviter d'avoir des rivieres qui se coupent
                 rivieres.append(all_maxpaths[0])
         return rivieres
 
