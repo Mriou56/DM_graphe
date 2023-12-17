@@ -142,7 +142,7 @@ on a apporté des modifications dans l'alias afin de renommer les noms de la lé
 
 Les tests de programme sont réalisés dans le fichier questions.py.
 Dans ce fichier, on retrouve les différentes fonctions répondant à chacune des questions et qui seront par la suite appelées dans le main.
-La fonction répondant a la question_3 est :
+La fonction répondant aux trois premières question est :
 ````python
 def first_part(hex_grid: HexGridViewer):
     """
@@ -196,6 +196,7 @@ Et on appelle la fonction show afin de pouvoir afficher notre graphe sous forme 
 
 ````
 
+
 ## Question 4:
 Pour créer une zone, nous avons dans un premier temps fait une fonction pour l'implementer dans la grille puis nous avons ajouté une classe 
 ```python
@@ -211,16 +212,35 @@ class Zone():
 Grâce à cela nous pouvons retourver facilement le centre de la zone (vertex centre), la taille de son rayon (distance) et
 le dictionnaire de couleur correpondant au type de la zone (typeZone).
 
+Pour voir les resultats de cette question il faut lancer la fonction
+```python
+def question_zone(hex_grid):
+```
+qui est présente dans le main.
+
 ## Question 5:
 Pour créer une rivière, nous recherchons les points les plus hauts de la grille à l'aide de la fonction find_higher puis
 à l'aide d'un code DFS nous cherchons le chemin le plus long à partir de ces sommets
 
 Concernant les embranchements si deux rivères se rejoignent, elles vont juste devenir une seule rivière
 
-## Qustion 6:
+Cette fois-ci encore dans le main on retrouve la fonction
+```python
+def question_river(hex_grid)
+```
+qui permet d'afficher la plus longue rivière à partir d'un sommet du graphe.
+
+## Question 6:
 Pour ajouter de la logique à notre carte, nous avons créé des zones ayant des altitudes dans un intervalle défini qui varie
 faiblement d'un voisin à l'autre que nous ajoutons sur notre carte qui à également des sommets d'altitudes aléatoire
 Ces altitudes varient d'une valeur comprise dans un intervalle compris entre 0 et 0,2.
+
+La fonction ``` def carte_old(hex_grid: HexGridViewer, nb_rivers, nb_zones) ``` est la première carte logique que nous avons réalisée,
+elle prend en paramètre la grille, le nombre de rivière et le nombre de zone que nous voulons afficher . Par la suite
+nous avons réfléchis à différentes améliorations pour cette carte et nous avons obtenus la fonction 
+```def carte_withConstraint(hex_grid: HexGridViewer, nbRivers, nbZonesVolcan, nbZonesVilles, nbOtherZonesMax, maxDistance) ``` qui prend en paramètre la grille, le nombre de rivières, le nombre 
+de volcan, le nombre de villes, le nombre de zones autre et le rayon maximal des zones. Ces deux fonctions sont présentes dans
+le main afin de tester le code.
 
 ## Question 7 :
 Pour trouver le chemin le plus rapide entre 2 villes, nous utilisons la fonction pcc qui determine le plus court chemin 
@@ -231,6 +251,9 @@ d'arrêtes.
 Voici le tableau avec la compexité temporelle en fonction du nombre de villes et de la taille de la grille :
 
 ![img_1.png](img_1.png)
+
+La fonction ``` def carte_old(hex_grid: HexGridViewer, nb_rivers, nb_zones) ``` est également utilisée pour répondre à cette question
+car on y a ajouté l'algorithme du plus court chemin.
 
 ## Question 8:
 Maintenant, nous pouvons pondérer les arêtes en fonction du type de terrain. Pour se faire nous prenons le poids du type
@@ -244,7 +267,10 @@ Pour empecher les chemins de passer par les rivières, il faut supprimer les arr
 ou une zone aquatique. Il faut également empêcher le passage dans la lave en utilisant la même méthode.
 
 Nous utilisons l'alorithme de Dijkstra pour trouver le chemin le plus court entre deux villes en prennant en compte la pondération
-de chaque arête.
+de chaque arête. Pour répondre à cette question nous avons créé la fonction ```carte_dikjrsta(hex_grid, nb_zone, nb_river)``` prenant en 
+paramètre la grille hexagonale, le nombre de zones et le nombre de villes que nous souhaitons avoir. Afin de 
+compléter le tableau de complexité nous avons modifié les probabilité d'apparition des zones pour que ces dernières
+soient uniquement des villes.
 
 Voici un tableau pour représenter la complexité temporelle de l'algorithme de Dijkstra en fonction du nombre de villes 
 et la taille de la grille :
@@ -261,6 +287,11 @@ Ensuite le plus gros problème que nous avons rencontré est le fait que certain
 nous empêchant de determine le chemin en entier entre deux villes. Ce problème de disparition d'arrêtes est certainement 
 lié au fait que nous supprimons les arrêtes passant dans les rivières et que nous n'avions pas encore enlever le fait qu'une
 ville puisse apparaitre dans une rivère.
+
+Pour cette dernière question nous avons dans le main la fonction ``` def carte_kruskal(hex_grid, nb_zone, nb_river) ``` qui prend en paramètre 
+la grille hexagonale, le nombre de zones et le nombre de rivières présents dans la grille.
+Cette fonction ne fonctionne pas à tous les coup à cause du problème évoqué précedemment et que 
+nous n'avons pas eu le temps de résoudre complétement pour cette question.
 
 ## Question 10:
 
