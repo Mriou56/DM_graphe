@@ -136,28 +136,55 @@ text_altitude permet d'afficher l'altitude, l'altitude a été
 ```
 
 ## Question 3:
-Pour répondre à cette question nous avons créé la fonction question1
+Pour répondre à cette question, nous avons créé la fonction question1
 
 ## Question 4:
-Pour creer une zone nous avons dans un premier temps fait une fonction pour l'impémenter dans la grille puis nous avons ajouté une classe 
+Pour créer une zone, nous avons dans un premier temps fait une fonction pour l'implementer dans la grille puis nous avons ajouté une classe 
+```python
+class Zone():
+
+    def __init__(self, vertexCentre: Vertex, distance, typeZone, areaDicoType):
+        self.centre = vertexCentre
+        self.distance = distance
+        self.typeZone=typeZone
+        self.areaDicoType = areaDicoType
+```
 
 ## Question 5:
-Pour créer une rivière nous recherchons les points les plus hauts de la grille à l'aide de la fonction find_higher puis à l'aide d'un code DFS nous cherchons le chemin le plus long à partir de ces sommets
+Pour créer une rivière, nous recherchons les points les plus hauts de la grille à l'aide de la fonction find_higher puis à l'aide d'un code DFS nous cherchons le chemin le plus long à partir de ces sommets
 
-Concernant les embranchements si deux rivères se rejoingnent elle vont juste devenir une seule rivière
+Concernant les embranchements si deux rivères se rejoignent, elles vont juste devenir une seule rivière
 
 ## Qustion 6:
-Pour ajouter de la logique à notre carte nous avons créé des zones ayant des altitudes dans un intervalle défini qui varie faiblement d'un voisin à l'autre  que nous ajoutons sur notre crate qui à également des sommets d'altitudes aléatoire
+Pour ajouter de la logique à notre carte, nous avons créé des zones ayant des altitudes dans un intervalle défini qui varie faiblement d'un voisin à l'autre  que nous ajoutons sur notre crate qui à également des sommets d'altitudes aléatoire
 
 ## Question 7 :
-Pour trouver le chemin le plus rapide entre 2 villes nous utilisons la fonction pcc qui detremine le plus court chemin entre deux sommets quand nous n'avons pas de contraintes de pondération.
+Pour trouver le chemin le plus rapide entre 2 villes, nous utilisons la fonction pcc qui determine le plus court chemin entre deux sommets quand nous n'avons pas de contraintes de pondération.
 Il s'agit d'un algorithme ayant une complexité temporelle en O(|S|+|A|) avec S le nombre de sommets du graphe et A le nombre d'arrêtes.
 
+Voici le tableau avec la compexité temporelle en fonction du nombre de villes et de la taille de la grille :
+
+![img_1.png](img_1.png)
+
 ## Question 8:
-Maintenant nous pouvons pondérer les arètes en fonction du type de terrain
-Pour empecher les chemins de passer par les rivières il faut supprimer les arrètes des sommets par lesquels passent une rivière ou une zone aquatique
+Maintenant, nous pouvons pondérer les arêtes en fonction du type de terrain. Pour se faire nous prenons le poids du type de terrain d'arrivé, prédéfini dans le dictionnaire:
+```python
+dict_dist = { 'gray' : 1, 'darkolivegreen':1, 'sandybrown' : 2, 'forestgreen' : 2, 'darkgreen' : 2, 'sienna':3, 'black': 2,
+              'snow':4, 'darkred':4, 'saddlebrown': 3, 'green': 1, 'royalblue': 50, 'red': 50, 'turquoise': 50}
+``` 
+à cette valeur, nous ajoutons la différence d'altitude entre les deux sommets pour obtenir des poids propres à chaque arête.
+Pour empecher les chemins de passer par les rivières, il faut supprimer les arrêtes des sommets par lesquels passent une rivière ou une zone aquatique. Il faut également empêcher les passage dans la lave en utilisant la même méthode.
+
+Voici un tableau pour représenter la complexité temporelle en fonction du nombre de ville et la taille de la grille:
+![img_2.png](img_2.png)
 
 ## Question 9:
-Pour creer ce réseau le mieux est d'utiliser l'algorithme de Kruskal
+Pour créer ce réseau le mieux est d'utiliser l'algorithme de Kruskal.
+Nous avons rencontré de nombreuses difficultés lors de l'implémentation de cet algorithme dans notre code en le liant avec la grille et en utilisant la classe vertex qui contient toutes les informations sur un sommet.
+Nous avons dans un premier temps eu du mal, car les arrêtés ne s'affichaient pas uniquement avec des sommets voisins mais avec des sommets d'un côté à l'autre de la carte.
+Ensuite le plus gros problème que nous avons rencontré est le fait que certaines arêtes présentes sur le chemin disparaissaient nous empêchant de determine le chemin en entier entre deux villes. Ce problème de disparition d'arrêtes 
+est certainement lié au fait que nous supprimons les arrêtes passant dans les rivières et que nous n'avions pas encore enlever le fait qu'une ville puisse apparaitre dans un rivère.
 
 ## Question 10:
+
+Étant donné nos difficultés pour implémenter et répondre à la question précédente nous n'avons pas eu le temps de résoudre cette question.

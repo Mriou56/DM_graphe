@@ -11,7 +11,7 @@ class Zone():
         # list (vertex, current_distance), at initialization current_distance = 0 because center of zone
         self.listVertexInTheZone = [(vertexCentre, 0)]
 
-    def printV(self):
+    def printZ(self):
         print('coord central zone: ', self.centre)
         print('distance: ', self.distance)
         print('type (area): ', self.areaName)

@@ -208,7 +208,7 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
         v = graphe_grid.get_vertetx(x, y)
         d = random.randrange(1, 4)
         # random with weight to define the type of biome (villes ou desert ...)
-        biome = random.choices(tuple(dict_area.keys()), weights=(9,3,5,4,2,2), k=1)
+        biome = random.choices(tuple(dict_area.keys()), weights=(9,0,0,0,0,0), k=1)
         zone = graphe_grid.zone2(v, d, biome[0], dict_area[biome[0]])
         zones.append(zone)
         #graphe_grid.zone2(v, d, dict_area[biome[0]])
@@ -217,7 +217,7 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
             hex_grid.add_symbol(*v.coord, Circle("red"))
             tab_ville.append(v)
 
-
+    ttotal = 0
     for v1 in tab_ville:
         for v2 in tab_ville:
             # Get the address of the vertex in the graph grid
@@ -227,11 +227,11 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
             # Get the shortest path between two towns in the grid
             tstart = time.time()
             short = pcc(graphe_grid, vertex1, vertex2)
-            print(time.time() - tstart)
+            ttotal+= time.time() - tstart
             for x in range(0,len(short)-1):
                 hex_grid.add_link(short[x].coord, short[x+1].coord, "purple")
 
-
+    print('Le temps de parcours du plus court chemin ==>', ttotal)
 
     # Creation of the rivers
     for n in range(0, nb_rivers):
@@ -310,7 +310,7 @@ def carte_dikjrsta(hex_grid, nb_zone, nb_river):
             if v.terrain == 'royalblue' or v.terrain == 'red' or v.terrain == 'turquoise':
                 graphe_grid.remove_edge(v, v2, dist)
 
-
+    ttotal = 0
     # Use the dijkstra algorithme to search the shortest path between two cities
     for v1 in tab_ville:
         for v2 in tab_ville:
@@ -318,16 +318,14 @@ def carte_dikjrsta(hex_grid, nb_zone, nb_river):
 
                 tstart = time.time()
                 short = dijsktra(graphe_grid, v1)
-                print('Le temps de parcours de Dijkstra =>', time.time() - tstart)
+                ttotal += time.time() - tstart
                 list_short = chemin_dijkstra(short, v2)
 
                 # Show the link between vertex
                 for x in range(0, len(list_short) - 1):
                     hex_grid.add_link(list_short[x].coord, list_short[x + 1].coord, "purple")
 
-
-
-
+    print('Le temps de parcours de Dijkstra =>', ttotal)
 
     for v in graphe_grid.vertex():
         # Modification of the color and the opacity of one cell
