@@ -131,12 +131,12 @@ def question_river(hex_grid: HexGridViewer):
 
     # add edge (arrête) entre les Vertex
     for v in graphe_grid.vertex():
-        list = graphe_grid.get_neighbour(v)
-        for v2 in list:
+        liste = graphe_grid.get_neighbour(v)
+        for v2 in liste:
             graphe_grid.add_edge(v, v2)
 
     # get Max altitude
-    listVertMax = graphe_grid.find_ListOfhigher()
+    listVertMax = graphe_grid.find_ListOfhigher(list(graphe_grid.vertex()))
 
     rivieres = []
     # show only one riviere in the graph

@@ -23,7 +23,7 @@ if __name__ == "__main__":
     # test()
     # first_part(hex_grid)
 
-    ## Algorithm to create a regular area around a vertex
+    # Algorithm to create a regular area around a vertex
 
     # question_zone(hex_grid)
 
@@ -31,13 +31,14 @@ if __name__ == "__main__":
 
     # question_river(hex_grid)
 
-    # Function to build a logical map and use the pcc algorithm
+    # first version of question 6
 
-    #carte_old(hex_grid, 5, 10)
+    # carte_old(hex_grid, 5, 5)
 
-    # Function to build a ligical map with constraint
-    # nb Zone that we would like to add: nbRivers (max), nbZonesVolcan (max), nbZonesVilles, nbOtherZonesMax, maxDistance
-    #carte_withConstraint(hex_grid, 2, 2, 2, 5, 4)
+    # second version of question 6
+    # build a map with constraint contained the PCC
+
+    # carte_withConstraint(hex_grid, 2, 2, 2, 5, 4)
 
     # Create a map with the dijkstra algorithm to show the shortest route between cities
 

@@ -244,7 +244,7 @@ class GraphList(Graph):
         if (len(liste) > 0):
             v_max = liste[0]
             max = v_max.altitude
-            for v in liste:       #self.vertex():
+            for v in liste:
                 if v.altitude > max:
                     max = v.altitude
                     v_max = v
@@ -532,24 +532,6 @@ class GraphList(Graph):
                 rivieres.append(all_maxpaths[0])
         return rivieres
 
-    def DFSinner(self, ver: Vertex, parcours: list):
-        ver.terrain = "blue"
-        min = []
-        min_max = -1
-        max = None
-
-        for t in self.succ(ver):
-            if t.altitude < ver.altitude:
-                min.append(t)
-
-        for i in min:
-            if i.altitude > min_max:
-                min_max = i.altitude
-                max = i
-
-        if max != None:
-            parcours.append(max)
-            self.DFSinner(max, parcours)
 
     def DFS(self, listVertNeigbour: [], vert: Vertex, path=None):
         """
@@ -572,7 +554,7 @@ class GraphList(Graph):
             paths.extend([p for p in paths_node if len(p) == max_len])
 
         return paths
-
+    # return several path
     # def riviere(self, vert: Vertex):
     def rivieres(self, listVertMaxAltitude: list):
         """

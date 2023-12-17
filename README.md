@@ -196,66 +196,188 @@ Et on appelle la fonction show afin de pouvoir afficher notre graphe sous forme 
 
 ````
 
-
 ## Question 4:
-Pour créer une zone, nous avons dans un premier temps fait une fonction pour l'implementer dans la grille puis nous avons ajouté une classe 
-```python
-class Zone():
+*Réalisé par Alexandre*
 
-    def __init__(self, vertexCentre: Vertex, distance, typeZone, areaDicoType):
-        self.centre = vertexCentre
-        self.distance = distance
-        self.typeZone=typeZone
-        self.areaDicoType = areaDicoType
-```
+Afin de répondre à cette question, a été implémenté dans le fichier Graph_List.py une fonction def zone.
 
-Grâce à cela nous pouvons retourver facilement le centre de la zone (vertex centre), la taille de son rayon (distance) et
-le dictionnaire de couleur correpondant au type de la zone (typeZone).
+Le but de cette fonction est en partant d'un sommet et d'une distance particulière qui définira la taille de la zone en vertex,
+de générer une zone régulière s'étendant sur la carte. 
+Tels que le montre l'image ci-dessous :
 
-Pour voir les resultats de cette question il faut lancer la fonction
-```python
-def question_zone(hex_grid):
-```
-qui est présente dans le main.
+![img_3.png](img_3.png)
+
+Dans notre fonction, nous prenons en paramètre le graphe sur lequel nous opérons, 
+le point de départ de notre zone, la distance souhaitée pour notre zone, ainsi qu'un dictionnaire. 
+Ce dictionnaire permet de changer la couleur chaque fois que la distance augmente de 1.
+
+Le concept derrière cette fonction est d'initialiser le centre de notre zone avec le sommet spécifié en paramètre, ainsi que sa position dans la zone, initialement à 0.
+Ensuite, nous progressons en vérifiant que notre liste n'est pas vide et que nous n'avons pas atteint la limite de distance spécifiée. 
+À chaque itération, nous retirons le premier élément de notre liste et examinons les voisins autour de ce sommet. Si le voisin n'a pas été visité, nous l'ajoutons à notre liste en augmentant sa distance actuelle de 1. 
+Dès que la division de cette distance actuelle par 6 donne un résultat de 0, nous modifions la couleur de notre liste.
+````python
+    def zone(self, centre: Vertex, dist, dico: dict):
+        """
+        Get the area around a vertex
+        :type centre: the center vertex
+        :param dist: dist of the area
+        :param dico: the dictionary of the corresponding area
+        :return: zone of neighbor
+       """
+        queue = [(centre, 0)]
+        visited = set()
+        visited.add(centre)
+
+        while queue:
+            current_vertex, current_distance = queue.pop(0)
+            current_vertex.terrain = dico[current_distance % 6]
+
+            if current_distance < dist:
+                neighbors = self.get_neighbour(current_vertex)
+
+                for neighbor in neighbors:
+                    if neighbor not in visited:
+                        queue.append((neighbor, current_distance + 1))
+                        visited.add(neighbor)
+````
+Un objet zone de cette fonction sera ensuite créer pour gérer plus facilement les différents types de zone présents dans notre graphe et utiliser à l'avenir. 
+
+La fonction zone sera ensuite appelée dans le fichier question.py.
+Cela va permettre d'afficher notre zone.
+En partant d'un graph, on mettra sur l'ensemble de notre terrain de la neige afin de mieux voir la zone.
+
+Pour observer la grille, il suffira d'aller dans le fichier main.py et de dé commenter question_zone.
 
 ## Question 5:
-Pour créer une rivière, nous recherchons les points les plus hauts de la grille à l'aide de la fonction find_higher puis
-à l'aide d'un code DFS nous cherchons le chemin le plus long à partir de ces sommets
+*Réalisé en majeure partie par Alexandre, mais aidé par margot*
 
-Concernant les embranchements si deux rivères se rejoignent, elles vont juste devenir une seule rivière
+Cette question s'est divisée en 2 temps.
+Dans un premier temps, il a fallu créer une méthode permettant de trouver le sommet le plus haut de notre carte.
 
-Cette fois-ci encore dans le main on retrouve la fonction
-```python
-def question_river(hex_grid)
-```
-qui permet d'afficher la plus longue rivière à partir d'un sommet du graphe.
+Pour ce faire, nous avons décidé d'implémenter dans le fichier Graph_List.py une fonction find_higher qui renvoie le sommet le plus haut sur une liste de sommet passer en paramètre (dans notre cas graph_grid.vertex).
+Or il arrive d'obtenir plusieurs sommets de la même altitude.
+Dans ce cas, on va utiliser la fonction find_ListOfhigher.
+Cette fonction complète la fonction precedente et renvoie après avoir recherché via find_higher le sommet le plus haut,
+une liste contenant tous les vertex ayant la même altitude maximale que le premier vertex trouvé.
 
-## Question 6:
+Ces 2 méthodes implémentées, nous avons décidé d'utiliser l'algorithme DFS afin de tracer des rivières à partir d'un point donné sur la carte.
+Nous l'avons quelque peu boosté afin qu'il nous renvoie le chemin le plus long possible.
+
+Cette méthode a également été implémenté dans le fichier Graph_List.py.
+Nous recherchons les points les plus hauts de la grille à l'aide de la fonction find_higher et find_ListOfhigher puis
+à l'aide d'un code DFS nous cherchons le chemin le plus longs via l'exploration récursive des voisins ayant une altitude inférieure ou égale à celle de départ.
+
+En découlera de DFS, la fonction Rivière qui prend en paramètre le point le plus haut et détermine le chemin le plus long.
+Une autre méthode sera aussi créer, "rivières" qui prendra une liste de vertex en paramètre et déterminera le chemin le plus long pour chacun des sommets choisis en paramètre.
+
+Cette question sera appelée de la même manière que la question précédente. 
+La fonction riviere sera appelée dans le fichier question.py.
+Cela va permettre d'afficher notre riviere.
+En partant d'un graph, on mettra sur l'ensemble de notre terrain de la neige afin de mieux voir la rivière.
+
+Pour observer la grille, il suffira d'aller dans le fichier main.py et de dé commenter question_river(hex_grid).
+
+
+## Qustion 6:
+*Réaliser par Alexandre et Margot,*
+*Axe d'amélioration réalisée par Alexandre*
+
+Cette question propose un algorithme, qui, s’inspirant des deux precedents, génère une
+carte aléatoirement, de sorte que les altitudes soient "logiques" et que les types de terrains
+aient une cohérence, avec les rivières.
+
+Pour ce faire, nous avons dans un premier temps, repris la méthode zone effectuer par Alexandre dans une méthode nommé Zone 2.
+Cette méthode va concrètement reprendre zone, mais en fonction du type de zone, définir une altitude à prendre en compte.
+Pour une foret, on va par exemple retrouver une altitude qui varie entre 0.3 et 0.6 tandis que pour une montagne, on va retrouver une altitude qui varient entre 0.8 et 1.
+Lors du parcours des voisins afin de savoir s'il sont visité ou non, on va selon les zones 
+
+
+````python
+    def zone2(self, centre: Vertex, dist, typeZone, dico: dict):
+        """
+        Get the area around a vertex
+        :type centre: the center vertex
+        :param dist: dist of the area
+        :param dico: the dictionary of the corresponding area
+        :return: zone of neighbors
+       """
+        queue = [(centre, 0)]
+        zone = Zone(centre, dist, typeZone, dico)
+        current_distance = 0
+        visited = set()
+        visited.add(centre)
+
+        while queue:
+            current_vertex, current_distance = queue.pop(0)  # queue.pop(0)
+            current_vertex.terrain = zone.areaDicoType[current_distance % 4]
+            # calcul altitude
+            if zone.typeZone == 'ville' or zone.typeZone == 'foret':
+                current_vertex.altitude = random.uniform(0.3, 0.6)
+            else:
+                if zone.typeZone == 'montagne' or zone.typeZone == 'volcan':
+                    current_vertex.altitude = random.uniform(0.8, 1)
+                else:
+                    if zone.typeZone == 'desert':
+                        current_vertex.altitude = random.uniform(0.4, 0.6)
+                    else:
+                        if zone.typeZone == 'lagon':
+                            current_vertex.altitude = random.uniform(0.1, 0.3)
+
+            if current_distance < dist:
+                neighbors = self.get_neighbour(current_vertex)
+
+                for neighbor in neighbors:
+                    if neighbor not in visited:
+                        queue.append((neighbor, current_distance + 1))
+                        zone.listVertexInTheZone.append((neighbor, current_distance + 1))
+                        visited.add(neighbor)
+                        if zone.typeZone == 'foret' or zone.typeZone == 'desert' or zone.typeZone == 'ville':
+                            x = current_vertex.altitude - 0.2
+                            y = current_vertex.altitude + 0.2
+                            neighbor.altitude = random.uniform(x, y)
+                        else:
+                            if zone.typeZone == 'montagne' or zone.typeZone == 'volcan':
+                                x = current_vertex.altitude - 0.1
+                                y = current_vertex.altitude + 0.1
+                                neighbor.altitude = random.uniform(x, y)
+                            else:
+                                if zone.typeZone == 'lagon':
+                                    current_vertex.altitude = random.uniform(0.1, 0.3)
+                                    neighbor.altitude = random.uniform(0.1, 0.3)
+
+                        # Test if the altitude of the vertex is between 0 and 1
+                        if neighbor.altitude >= 1:
+                            neighbor.altitude = 1
+                        else:
+                            if neighbor.altitude <= 0.1:
+                                neighbor.altitude = 0.1
+        return zone
+````
+
 Pour ajouter de la logique à notre carte, nous avons créé des zones ayant des altitudes dans un intervalle défini qui varie
 faiblement d'un voisin à l'autre que nous ajoutons sur notre carte qui à également des sommets d'altitudes aléatoire
 Ces altitudes varient d'une valeur comprise dans un intervalle compris entre 0 et 0,2.
 
-La fonction ``` def carte_old(hex_grid: HexGridViewer, nb_rivers, nb_zones) ``` est la première carte logique que nous avons réalisée,
-elle prend en paramètre la grille, le nombre de rivière et le nombre de zone que nous voulons afficher . Par la suite
-nous avons réfléchis à différentes améliorations pour cette carte et nous avons obtenus la fonction 
-```def carte_withConstraint(hex_grid: HexGridViewer, nbRivers, nbZonesVolcan, nbZonesVilles, nbOtherZonesMax, maxDistance) ``` qui prend en paramètre la grille, le nombre de rivières, le nombre 
-de volcan, le nombre de villes, le nombre de zones autre et le rayon maximal des zones. Ces deux fonctions sont présentes dans
-le main afin de tester le code.
+Proposez maintenant un algorithme, qui, s’inspirant des deux prédécedents, génère une
+carte aléatoirement, de sorte à ce que les altitudes soient "logiques" et que les types de terrains
+aient une cohérence, avec des rivières.
+Extension bonus : l’eau peut ne pas être une rivière, par exemple, avec les lacs. Quelle contrainte
+cela ajoute au programme ? Comment faire ?
+
 
 ## Question 7 :
+*Réaliser par Margot*
 Pour trouver le chemin le plus rapide entre 2 villes, nous utilisons la fonction pcc qui determine le plus court chemin 
 entre deux sommets quand nous n'avons pas de contraintes de pondération.
 Il s'agit d'un algorithme ayant une complexité temporelle en O(|S|+|A|) avec S le nombre de sommets du graphe et A le nombre
-d'arrêtes.
+d'arêtes.
 
 Voici le tableau avec la compexité temporelle en fonction du nombre de villes et de la taille de la grille :
 
 ![img_1.png](img_1.png)
 
-La fonction ``` def carte_old(hex_grid: HexGridViewer, nb_rivers, nb_zones) ``` est également utilisée pour répondre à cette question
-car on y a ajouté l'algorithme du plus court chemin.
-
 ## Question 8:
+*Réalisé en majeure partie par Margot, mais aidé par alexandre*
 Maintenant, nous pouvons pondérer les arêtes en fonction du type de terrain. Pour se faire nous prenons le poids du type
 de terrain d'arrivée, prédéfini dans le dictionnaire :
 ```python
@@ -267,16 +389,14 @@ Pour empecher les chemins de passer par les rivières, il faut supprimer les arr
 ou une zone aquatique. Il faut également empêcher le passage dans la lave en utilisant la même méthode.
 
 Nous utilisons l'alorithme de Dijkstra pour trouver le chemin le plus court entre deux villes en prennant en compte la pondération
-de chaque arête. Pour répondre à cette question nous avons créé la fonction ```carte_dikjrsta(hex_grid, nb_zone, nb_river)``` prenant en 
-paramètre la grille hexagonale, le nombre de zones et le nombre de villes que nous souhaitons avoir. Afin de 
-compléter le tableau de complexité nous avons modifié les probabilité d'apparition des zones pour que ces dernières
-soient uniquement des villes.
+de chaque arête.
 
 Voici un tableau pour représenter la complexité temporelle de l'algorithme de Dijkstra en fonction du nombre de villes 
 et la taille de la grille :
 ![img_2.png](img_2.png)
 
 ## Question 9:
+*Réalisé par Margot*
 Pour créer ce réseau, la solution la plus logique pour nous est d'utiliser l'algorithme de Kruskal.
 Nous avons rencontré de nombreuses difficultés lors de l'implémentation de cet algorithme dans notre code en le liant avec
 la grille et en utilisant la classe vertex qui contient toutes les informations sur un sommet.
@@ -287,11 +407,6 @@ Ensuite le plus gros problème que nous avons rencontré est le fait que certain
 nous empêchant de determine le chemin en entier entre deux villes. Ce problème de disparition d'arrêtes est certainement 
 lié au fait que nous supprimons les arrêtes passant dans les rivières et que nous n'avions pas encore enlever le fait qu'une
 ville puisse apparaitre dans une rivère.
-
-Pour cette dernière question nous avons dans le main la fonction ``` def carte_kruskal(hex_grid, nb_zone, nb_river) ``` qui prend en paramètre 
-la grille hexagonale, le nombre de zones et le nombre de rivières présents dans la grille.
-Cette fonction ne fonctionne pas à tous les coup à cause du problème évoqué précedemment et que 
-nous n'avons pas eu le temps de résoudre complétement pour cette question.
 
 ## Question 10:
 
