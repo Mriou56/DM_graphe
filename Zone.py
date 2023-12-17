@@ -11,6 +11,29 @@ class Zone():
         # list (vertex, current_distance), at initialization current_distance = 0 because center of zone
         self.listVertexInTheZone = [(vertexCentre, 0)]
 
+    def getCentre(self):
+        return self.centre
+    def vertexIntheZone(self, vertex):
+        """
+        Return true is the vertex is in the Zone, else return false
+        :param vertex: vertex
+        :return: true if vertex in the zone
+        """
+        if vertex in self.listVertexInTheZone:
+            return True
+        return False
+
+    def getlistVertexInTheZone(self):
+        return self.listVertexInTheZone
+
+    def addVertexDistanceInTheZone(self, vert: Vertex, distance):
+        self.listVertexInTheZone.add((vert, distance))
+
+    def returnOnlyTheVertexs(self):
+        listVertex = []
+        for couple in self.listVertexInTheZone:
+            listVertex.append(couple[0])
+        return listVertex
     def printV(self):
         print('coord central zone: ', self.centre)
         print('distance: ', self.distance)

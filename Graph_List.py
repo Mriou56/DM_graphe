@@ -16,6 +16,16 @@ dict_area = {'ville' : {0: 'gray', 1: 'gray', 2: 'gray', 3: 'gray', 4: 'darkoliv
              'volcan' : {0:'red', 1:'darkred', 2:'darkred', 3:'saddlebrown', 4:'black'},
              'lagon' : {0:'turquoise', 1:'turquoise', 2:'turquoise', 3:'turquoise', 4:'turquoise'}}
 
+dict_area_withoutVilleAndVolcan = {
+             'desert' : {0: 'sandybrown', 1: 'sandybrown', 2:'sandybrown', 3:'sandybrown', 4:'sandybrown'},
+             'foret' : {0:'darkgreen', 1:'forestgreen', 2:'forestgreen', 3:'forestgreen', 4:'forestgreen'},
+             'montagne' : {0:'snow', 1:'sienna', 2:'sienna', 3:'sienna', 4:'sienna'},
+            }
+dict_ville = {0: 'gray', 1: 'gray', 2: 'gray', 3: 'gray', 4: 'darkolivegreen'}
+dict_volcan = {0:'red', 1:'darkred', 2:'darkred', 3:'saddlebrown', 4:'black'}
+
+dict_quest4 ={0: 'black', 1: 'red', 2: 'orange', 3: 'yellow'}
+
 dict_dist = { 'gray' : 1, 'darkolivegreen':1, 'sandybrown' : 2, 'forestgreen' : 2, 'darkgreen' : 2, 'sienna':3, 'black': 2,
               'snow':4, 'darkred':4, 'saddlebrown': 3, 'green': 1, 'royalblue': 0, 'red': 0, 'turquoise':0}
 
@@ -236,6 +246,21 @@ class GraphList(Graph):
 
         return v_max
 
+    def find_higherWithConstraint(self, ListVertexNotExluded: list):
+        """
+        Get the higher vertex of ListVertexNotExluded if several return a list
+        :return: a vertex
+        """
+        # convert the dictionary items in a list and get the 1st items
+        v_max = ListVertexNotExluded[0] #list(self.vertex())[0]
+        max = v_max.altitude
+        for v in ListVertexNotExluded:
+            if v.altitude > max:
+                max = v.altitude
+                v_max = v
+
+        return v_max
+
     def find_ListOfhigher(self):
         """
         Get the list of higher vertex of the graph (same altitude)
@@ -244,17 +269,75 @@ class GraphList(Graph):
         v_max = self.find_higher()
         mmax = [v_max]
         lVectWithoutOne = list(self.vertex())
-        nb = 0
-        nb2 = 0
+        #   nb = 0
+        #   nb2 = 0
         # loop to search all vertex with same altitude and add it in a list
         for v in lVectWithoutOne:
-            nb2 = nb2 + 1
+            #     nb2 = nb2 + 1
             if v.altitude == v_max.altitude:
-                nb = nb + 1
+                #    nb = nb + 1
                 if v not in mmax:
                     mmax.add(v)
-                    nb = nb + 1
+                    #   nb = nb + 1
         return mmax
+
+    def find_ListOfhigherWithConstraint(self,ListVertexNotExluded: list):
+        """
+        Get the list of higher vertex (vertex with the same max altitude) of ListVertexNotExluded
+        :return: List
+        """
+        v_max = self.find_higherWithConstraint(ListVertexNotExluded)
+        mmax = [v_max]
+       # lVectWithoutOne = ListVertexNotExluded #list(self.vertex())
+        # loop to search all vertex with same altitude and add it in a list
+        for v in ListVertexNotExluded:
+            if v.altitude == v_max.altitude:
+                if v not in mmax:
+                    mmax.add(v)
+        return mmax
+    def find_higherVertexsForRiver(self, nbRivers, ListVertexToBeExluded: list):
+        """
+        return in a list of Vertex corresponding to Vertex with a max altitude that
+        are not in ListVertexToBeExluded,
+        :type nbRivers: int - nb rivers that we want to have
+        :return: list of vertex
+        """
+        # search the set of vertex having the same max altitude that is the max in the graph
+        # after check that are not in ListVertexToBeExluded
+
+        ListVertexNotExlude = [vert for vert in self.vertex() if vert not in ListVertexToBeExluded]
+        #get vertex having max altitude in the Vertex not excluded
+        listVMax = self.find_ListOfhigherWithConstraint(ListVertexNotExlude)
+        listResult = []
+        if len(listVMax) == 0:
+            return listResult
+
+        v_max = listVMax[0]
+        cpt = 0
+        #search the max
+        # we have a vertex that has the max altitude and is not in zone exclude
+        listResult.append(v_max)
+        ListVertexNotExlude.remove(v_max)
+        cpt = cpt + 1
+        if nbRivers == cpt:
+            return listResult
+        # Search now, other vertex having a max altitude (removing the Vertex already added in listResult
+
+        while (cpt < nbRivers) and (len(ListVertexNotExlude) > 0):
+               # search the next max altitude
+                v_max = list(ListVertexNotExlude)[0]
+               # in theory we will have always v_max.altitude <= listResult[cpt-1].altitude
+                if v_max.altitude <= listResult[cpt-1].altitude:
+                    for v in ListVertexNotExlude:
+                        if v.altitude <= listResult[cpt-1].altitude:
+                            if v.altitude >= v_max.altitude:
+                                if v not in listResult:
+                                    v_max = v
+                    listResult.append(v_max)
+                    cpt = cpt + 1
+                ListVertexNotExlude.remove(v_max)
+
+        return listResult
 
     def zone(self, centre: Vertex, dist, dico: dict):
         """
@@ -302,6 +385,7 @@ class GraphList(Graph):
         while queue:
             current_vertex, current_distance = queue.pop(0) # queue.pop(0)
             current_vertex.terrain = zone.areaDicoType[current_distance % 4]
+            # calcul altitude
             if zone.typeZone == 'ville' or zone.typeZone == 'foret':
                 current_vertex.altitude = random.uniform(0.3, 0.6)
             else:
@@ -344,6 +428,135 @@ class GraphList(Graph):
                                 neighbor.altitude = 0.1
         return zone
 
+    def zoneBuildWithConstraint(self, distanceMax, typeZone, ListVertexToBeExluded: list, dico):
+        """
+        Return a zone that is build in function of ListVertexToBeExluded - the distance will be recalculate.
+        We know that the max distance will be distanceMax - the zone will be built if vertex is not
+        in ListVertexToBeExluded.
+        If we don't find neighbourg (because all are in ListVertexToBeExcluded) same
+        if distance < distanceMax then we will return the zone. If we can't build a zone, we will return None
+        :type dico: dico linked to typeZone
+        :type ListVertexToBeExluded: list of vertex where the vertex of zone won 't be assigned to zone
+        :type typeZone: type of zone
+        :type distanceMax: max distance of zone
+
+        """
+        #remobe the Vertex where we don t want to put the zone
+        ListVertexNotExlude=[]
+        listVertex = list(self.vertex())
+        if len(ListVertexToBeExluded) > 0:
+            ListVertexNotExlude = [vert for vert in listVertex if vert not in ListVertexToBeExluded]
+            if len(ListVertexNotExlude) == len(listVertex):
+                return None
+        else:
+            ListVertexNotExlude=ListVertexNotExlude + listVertex
+        from random import randrange
+        vertZone = ListVertexNotExlude[randrange(len(ListVertexNotExlude))]
+
+        visited = set()
+        visited.add(vertZone)
+
+        distanceRecalule=0
+
+        queue = [(vertZone, 0)]
+        zone = Zone(vertZone, distanceMax, typeZone, dico)
+        nb=0
+        fin = False
+        while queue:
+            current_vertex, current_distance = queue.pop(0) # queue.pop(0)
+            current_vertex.terrain = zone.areaDicoType[current_distance % 5] #initialement %6
+            current_vertex.altitude = random.uniform(0.8, 1)
+
+            if current_distance < distanceMax and fin is False:
+                neighbors = self.get_neighbour(current_vertex)
+                #nb voisin added
+                nb = 0
+                for neighbor in neighbors:
+                    if neighbor not in visited:
+                        if neighbor not in ListVertexToBeExluded:
+                            nb = nb+1
+                            queue.append((neighbor, current_distance + 1))
+                            zone.listVertexInTheZone.append((neighbor, current_distance + 1))
+                            visited.add(neighbor)
+                            if zone.typeZone == 'foret' or zone.typeZone == 'desert' or zone.typeZone == 'ville':
+                                x = current_vertex.altitude - 0.2
+                                y = current_vertex.altitude + 0.2
+                                neighbor.altitude = random.uniform(x, y)
+                            else:
+                                if zone.typeZone == 'montagne' or zone.typeZone == 'volcan':
+                                    x = current_vertex.altitude - 0.1
+                                    y = current_vertex.altitude + 0.1
+                                    neighbor.altitude = random.uniform(x, y)
+                                else:
+                                    if zone.typeZone == 'lagon':
+                                        current_vertex.altitude = random.uniform(0.1, 0.3)
+                                        neighbor.altitude = random.uniform(0.1, 0.3)
+
+                        # Test if the altitude of the vertex is between 0 and 1
+                        if neighbor.altitude >= 1:
+                            neighbor.altitude = 1
+                        else:
+                            if neighbor.altitude <= 0.1:
+                                neighbor.altitude = 0.1
+                if nb == 0:
+                    fin = True
+
+        # assign the true distance
+        zone.distance = current_distance
+        return zone
+
+    def DFS_WithConstraint(self, listVertNeigbour: [],  ListVertexToBeExluded: list, vert: Vertex, path=None):
+        """
+        Return the longer path without to have a Vertex in ListVertexToBeExluded (can have several with the same distance)
+        :param vert: Vertex if it is ListVertexToBeExluded, return Path
+        :param listVertNeigbour: list of vertex neighbourg of vert
+        """
+        paths = []
+        paths_node = []
+        if vert in ListVertexToBeExluded:
+            return paths
+        else:
+            if path is None:
+                path = [vert]
+
+            for v in listVertNeigbour:
+                if v.altitude <= vert.altitude:
+                    if vert not in ListVertexToBeExluded:
+                        ListVertexToBeExluded.append(vert)
+                        t_path = path + [v]
+                        paths_node.append(tuple(t_path))
+                        paths_node.extend(self.DFS_WithConstraint(self.get_neighbour(v), ListVertexToBeExluded, v, t_path))
+
+            if (len(paths_node) > 0):
+                max_len = max(len(p) for p in paths_node)
+                paths.extend([p for p in paths_node if len(p) == max_len])
+
+        return paths
+
+    def rivieresWithConstraint(self, listVertMaxAltitude: list,  ListVertexToBeExluded: List):
+        """
+        Return list of rivieres (max nbRivers) having the longer path and where Vertex are not in ListVertexToBeExluded.
+
+        :param listVertMaxAltitude:
+        :param nbRivers:
+        :param ListVertexToBeExluded:
+        :return:
+        """
+       # calcul the longer path for a vertex (vert)
+        nb = 0
+        temp=0
+        rivieres = []
+        for vert in listVertMaxAltitude:
+            all_paths = self.DFS_WithConstraint(self.get_neighbour(vert), ListVertexToBeExluded,vert)
+            if len(all_paths) > 0:
+                max_len = max(len(p) for p in all_paths)
+                all_maxpaths = [p for p in all_paths if len(p) == max_len]
+                #  take only the 1st path (same if we have several path with the same length)
+                for v in all_maxpaths[0]:
+                    v.terrain = 'royalblue'
+                rivieres.append(all_maxpaths[0])
+        return rivieres
+
     def DFSinner(self, ver: Vertex, parcours: list):
         ver.terrain = "blue"
         min = []
@@ -363,6 +576,7 @@ class GraphList(Graph):
             parcours.append(max)
             self.DFSinner(max, parcours)
 
+
     def DFS(self, listVertNeigbour: [], vert: Vertex, path=None):
         """
         Return the longer path (can have several with the same distance)
@@ -378,7 +592,6 @@ class GraphList(Graph):
                 t_path = path + [v]
                 paths_node.append(tuple(t_path))
                 paths_node.extend(self.DFS(self.get_neighbour(v), v, t_path))
-
 
         if (len(paths_node) > 0):
             max_len = max(len(p) for p in paths_node)

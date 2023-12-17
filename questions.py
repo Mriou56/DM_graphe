@@ -56,7 +56,7 @@ def test():
     hex_grid.show(alias={"blue": "water", "white": "void", "grey": "rock"}, debug_coords=False)
 
 
-def question_1(hex_grid: HexGridViewer):
+def first_part(hex_grid: HexGridViewer):
     """
     Function to anser to the question 1, 2, 3
     :param hex_grid:
@@ -103,7 +103,7 @@ def question_zone(hex_grid: HexGridViewer):
             graphe_grid.add_vertex((i, j), t, alt)
 
     v = graphe_grid.get_vertetx(5, 5)
-    graphe_grid.zone(v, 4, dict_area['foret'])
+    graphe_grid.zone(v, 3, dict_quest4)
 
     for v in graphe_grid.vertex():
         # MODIFICATION DE LA COULEUR D'UNE CASE
@@ -153,7 +153,184 @@ def question_river(hex_grid: HexGridViewer):
                "red": "fire", "black": "obsidian"}, value_edgecolor="black", show_altitude=True, debug_coords=False)
 
 
-def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
+def carte_withConstraint(hex_grid: HexGridViewer, nbRivers, nbZonesVolcan, nbZonesVilles, nbOtherZonesMax, maxDistance):
+    """
+    Question 6 - Create a coherent card
+    :type nbZonesVilles: nb Zones max that will be built
+    :type nbZonesVolcan: nb volcan (constraint can t be on a ville and a river)
+    :type nbRivers: nb max riviers (constraint can t be on a ville and a volcan)
+    :param hex_grid: the grid to show
+    :param nbOtherZonesMax: nb other zones that will be added (no constraint)
+    :param maxDistance: distance max for a zone
+    :return: build a graph
+    """
+    tab_ville = []
+
+    print("Nb Riviere", nbRivers)
+    print("Nb nbZonesVolcan", nbZonesVolcan)
+    print("Nb nbZonesVilles", nbZonesVilles)
+    print("Nb nbOtherZonesMax", nbOtherZonesMax)
+    # calcule max distance - that is linked to hex_grid.width and height
+    if hex_grid.get_width() > hex_grid.get_height():
+        # take height as reference
+        max_distance = int(hex_grid.get_height() / 4)
+    else:
+        max_distance = int(hex_grid.get_width() / 4)
+    if max_distance < 2:
+        max_distance = 2
+
+    # Creation of a graph - all is green
+    # positionnement zone de plaine dans le Graph
+    graphe_grid = GraphList(False)
+    for i in range(0, hex_grid.get_width()):
+        for j in range(0, hex_grid.get_height()):
+            t = 'green'
+            alt = random.uniform(0.2, 0.5)
+            graphe_grid.add_vertex((i, j), t, alt)
+
+    # add edge (arrête) entre les Vertex
+    for v in graphe_grid.vertex():
+        # Add edges between vertex of the graph
+        list = graphe_grid.get_neighbour(v)
+        for v2 in list:
+            graphe_grid.add_edge(v, v2)
+
+    # Modification for a logical altitude
+    '''list_N = graphe_grid.get_neighbour(i, j)
+    a = 0
+    if len(list_N) > 1:
+        for n in list_N:
+            a += n.altitude
+        v = graphe_grid.get_vertetx(i, j)
+        v.altitude = a / len(list_N)
+        print(v.altitude)'''
+
+    # Ajout dans le Grid des biomes de manière aléatoire (les rivieres
+    # ne sont pas des zones). Ne mets pas les volcans
+    # On va modifier les zones en augmantant ou diminuant l'altide
+
+    # dict_area_withoutConstraint dictionary where we have: ville,desert,foret,montage
+    zonesDesVilles = []
+    zones = []
+
+    # Add the Zone Others (not Villes and not Volcan)
+    # --------------------
+    #for n in range(1, nbOtherZonesMax):
+    nbZoneCreated = 0
+    while nbZoneCreated < nbOtherZonesMax:
+        nbZoneCreated = nbZoneCreated + 1
+        x = random.randrange(0, hex_grid.get_width())
+        y = random.randrange(0, hex_grid.get_width())
+        v = graphe_grid.get_vertetx(x, y)
+        d = random.randrange(1, maxDistance)
+        # random with weight to define the type of biome (desert, foret or montain)
+        biome = random.choices(tuple(dict_area_withoutVilleAndVolcan.keys()), weights=(3, 4, 2), k=1)
+        zone = graphe_grid.zone2(v, d, biome[0], dict_area_withoutVilleAndVolcan[biome[0]])
+        zones.append(zone)
+        # graphe_grid.zone2(v, d, dict_area[biome[0]])
+
+    # Add the Zone villes
+    # -------------------
+    n = 0
+    #list of all Vertex where we have a ville - avoid to have villes l'une sur l'autre, elles peuvent être voisine
+    listVertexVilles = []
+    listVertexToBeExluded = []
+    nbZoneCreated=0
+    listVertexInzone=[]
+    nbZoneCreated = 0
+    while nbZoneCreated < nbZonesVilles:
+        d = random.randrange(1, maxDistance) #4
+        zone = graphe_grid.zoneBuildWithConstraint(d, 'ville', listVertexToBeExluded, dict_ville)
+        if zone is None:
+            nbZoneCreated = nbZonesVilles
+        else:
+            nbZoneCreated = nbZoneCreated + 1
+            listVertexInzone = zone.returnOnlyTheVertexs()
+            listVertexToBeExluded = listVertexToBeExluded + listVertexInzone
+            # add the listVertexInTheZone of this zone in the listVertexVilles
+            listVertexVilles = listVertexVilles + listVertexInzone
+            zones.append(zone)
+            v=zone.getCentre()
+            hex_grid.add_symbol(*v.coord, Circle("red"))
+            tab_ville.append(v)
+
+
+    # Buid the ville inside the "Ville" Zone
+    for v1 in tab_ville:
+        for v2 in tab_ville:
+            # Get the address of the vertex in the graph grid
+            vertex1 = graphe_grid.get_vertetx(*v1.coord)
+            vertex2 = graphe_grid.get_vertetx(*v2.coord)
+
+            # Get the shortest path between two towns in the grid
+            # tstart = time.time()
+            short = pcc(graphe_grid, vertex1, vertex2)
+            # print(time.time() - tstart)
+            for x in range(0, len(short) - 1):
+                hex_grid.add_link(short[x].coord, short[x + 1].coord, "purple")
+
+
+    # build the volcan Zone (outside Ville zone and other volcan zone)
+    # --------------
+    nbZoneCreated = 0
+    trouve = False
+    listVertexVolcans = []
+    listVertexToBeExluded=listVertexVilles
+
+    while (nbZoneCreated < nbZonesVolcan):
+        #positionne le 1er vertex du volcan sur une zone not ville
+
+        # we try to build the volcan with a distance max  = d.
+        # dès qu'un voisin n'est pas une ville, on l' ajoute si sa distance < d. Si tous les voisins sont des villes
+        # ou limite du graphe, on arrete de construire le volcan
+        d = random.randrange(1, 3) #4
+        zone = graphe_grid.zoneBuildWithConstraint(d, 'volcan', listVertexToBeExluded, dict_volcan)
+        if zone is None:
+            nbZoneCreated=nbZonesVolcan
+        else:
+            nbZoneCreated = nbZoneCreated + 1
+            listVertexInzone = zone.returnOnlyTheVertexs()
+            #ListVertexToBeExluded.append(zone.returnOnlyTheVertexs)
+            zones.append(zone)
+            listVertexVolcans = listVertexVolcans + listVertexInzone
+            listVertexToBeExluded = listVertexToBeExluded + listVertexInzone
+    
+
+    # Creation of the rivers - the river can't be build in the vertex that are in ListVertexToBeExluded
+    # --------------
+    listStartRiversVertex = []
+    # list of vertex representing the rivieres
+    rivieresWithConstraint = []
+    # we get the list of  vertex having the max altitude that are not in Ville and Volcan
+    listStartRiversVertex = graphe_grid.find_higherVertexsForRiver(nbRivers, listVertexToBeExluded)
+    if len(listStartRiversVertex) > 0:
+        #for each vertex of listStartRiversVertex we build a river trying to have le plus long chemin
+        # en prenant en compte les villes et les volcans = ListVertexToBeExluded
+        rivieresWithConstraint = graphe_grid.rivieresWithConstraint(listStartRiversVertex, listVertexToBeExluded)
+    else:
+        print("Not possible to add a river")
+
+
+
+    #End of treatment - add colors....
+    # -------------------
+    for v in graphe_grid.vertex():
+        # Modification of the color and the opacity of one cell
+        hex_grid.add_color(v)
+        hex_grid.add_alpha(v)
+    # hex_grid.add_color(v.coord[0], v.coord[1], v.terrain)
+    # hex_grid.add_alpha(v.coord[0], v.coord[1], v.altitude)
+
+    hex_grid.show(alias={"royalblue": "water", "snow": "snow", "gray": "town", "sandybrown": "desert",
+                         "darkolivegreen": "périphérie",
+                         "darkgreen": "foret", "forestgreen": "foret", "linen": "montagne", "sienna": "montagne",
+                         "red": "lava",
+                         "darkred": "lava", "saddlebrown": "obscidian", "black": "obsidian", "turquoise": "lagon",
+                         "green": "grass"}, show_altitude=True,
+                  debug_coords=False)
+
+
+def carte_old(hex_grid: HexGridViewer, nb_rivers, nb_zones):
     """
     Question 6 - Create a coherent card
     :param hex_grid: the grid to show
@@ -198,9 +375,11 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
         print(v.altitude)'''
 
     # Ajout dans le Grid des zones (biomes)de manière aléatoire - zone de type eau, sable, glace, ville (les rivieres
-    # ne sont pas des zones
+    # ne sont pas des zones). Ne mets pas les volcans
     # On va modifier les zones en augmantant ou diminuant l'altide
 
+    #dict_area_withoutConstraint dictionary where we have: ville,desert,foret,montage
+    zonesDesVilles = []
     zones = []
     for n in range(0, nb_zones):
         x = random.randrange(0, hex_grid.get_width())
@@ -208,14 +387,16 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
         v = graphe_grid.get_vertetx(x, y)
         d = random.randrange(1, 4)
         # random with weight to define the type of biome (villes ou desert ...)
-        biome = random.choices(tuple(dict_area.keys()), weights=(9,3,5,4,2,2), k=1)
-        zone = graphe_grid.zone2(v, d, biome[0], dict_area[biome[0]])
+        biome = random.choices(tuple(dict_area_withoutConstraint.keys()), weights=(9,3,5,4,2,2), k=1)
+        zone = graphe_grid.zone2(v, d, biome[0], dict_area_withoutConstraint[biome[0]])
         zones.append(zone)
         #graphe_grid.zone2(v, d, dict_area[biome[0]])
 
         if biome[0] == 'ville':
             hex_grid.add_symbol(*v.coord, Circle("red"))
             tab_ville.append(v)
+            #add the zone in the zonesDesVilles
+            zonesDesVilles.append(zone)
 
 
     for v1 in tab_ville:
@@ -233,12 +414,15 @@ def carte(hex_grid: HexGridViewer, nb_rivers, nb_zones):
 
 
 
-    # Creation of the rivers
+    # Creation of the rivers - a river can t be on a ville
     for n in range(0, nb_rivers):
         x = random.randrange(0, hex_grid.get_width())
         y = random.randrange(0, hex_grid.get_height())
         v = graphe_grid.get_vertetx(x, y)
         graphe_grid.riviere(v)
+
+    # put the Volcan (size 1 and 4) can 't be on a Ville and a River
+
 
     for v in graphe_grid.vertex():
         # Modification of the color and the opacity of one cell
@@ -340,7 +524,7 @@ def carte_dikjrsta(hex_grid, nb_zone, nb_river):
                          "red": "lava",
                          "darkred": "lava", "saddlebrown": "obscidian", "black": "obsidian", "turquoise": "lagon",
                          "green": "grass"},
-                  debug_coords=True)
+                  debug_coords=False)
 
 
 def carte_kruskal(hex_grid, nb_zone, nb_river):
