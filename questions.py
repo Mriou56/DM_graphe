@@ -294,7 +294,7 @@ def carte_withConstraint(hex_grid: HexGridViewer, nbRivers, nbZonesVolcan, nbZon
             zones.append(zone)
             listVertexVolcans = listVertexVolcans + listVertexInzone
             listVertexToBeExluded = listVertexToBeExluded + listVertexInzone
-    
+
 
     # Creation of the rivers - the river can't be build in the vertex that are in ListVertexToBeExluded
     # --------------
@@ -398,7 +398,7 @@ def carte_old(hex_grid: HexGridViewer, nb_rivers, nb_zones):
             #add the zone in the zonesDesVilles
             zonesDesVilles.append(zone)
 
-
+    ttotal = 0
     for v1 in tab_ville:
         for v2 in tab_ville:
             # Get the address of the vertex in the graph grid
@@ -406,15 +406,15 @@ def carte_old(hex_grid: HexGridViewer, nb_rivers, nb_zones):
             vertex2 = graphe_grid.get_vertetx(*v2.coord)
 
             # Get the shortest path between two towns in the grid
-            #tstart = time.time()
+            tstart = time.time()
             short = pcc(graphe_grid, vertex1, vertex2)
-            #print(time.time() - tstart)
+            ttotal+= time.time() - tstart
             for x in range(0,len(short)-1):
                 hex_grid.add_link(short[x].coord, short[x+1].coord, "purple")
 
+    print('Le temps de parcours du plus court chemin ==>', ttotal)
 
-
-    # Creation of the rivers - a river can t be on a ville
+    # Creation of the rivers
     for n in range(0, nb_rivers):
         x = random.randrange(0, hex_grid.get_width())
         y = random.randrange(0, hex_grid.get_height())
@@ -462,7 +462,7 @@ def carte_dikjrsta(hex_grid, nb_zone, nb_river):
         y = random.randrange(0, hex_grid.get_width())
         v = graphe_grid.get_vertetx(x, y)
         d = random.randrange(1, 5)
-        biome = random.choices(tuple(dict_area.keys()), weights=(9, 1, 1, 1, 1, 1), #(9, 3, 5, 4, 2, 2)
+        biome = random.choices(tuple(dict_area.keys()), weights=(9, 0, 0, 0, 0, 0), #(9, 3, 5, 4, 2, 2)
                                k=1)  # weights for the ponderation and k for the len of the list
         zone = graphe_grid.zone2(v, d, biome[0], dict_area[biome[0]])
         zones.append(zone)
@@ -494,7 +494,7 @@ def carte_dikjrsta(hex_grid, nb_zone, nb_river):
             if v.terrain == 'royalblue' or v.terrain == 'red' or v.terrain == 'turquoise':
                 graphe_grid.remove_edge(v, v2, dist)
 
-
+    ttotal = 0
     # Use the dijkstra algorithme to search the shortest path between two cities
     for v1 in tab_ville:
         for v2 in tab_ville:
@@ -502,16 +502,14 @@ def carte_dikjrsta(hex_grid, nb_zone, nb_river):
 
                 tstart = time.time()
                 short = dijsktra(graphe_grid, v1)
-                print('Le temps de parcours de Dijkstra =>', time.time() - tstart)
+                ttotal += time.time() - tstart
                 list_short = chemin_dijkstra(short, v2)
 
                 # Show the link between vertex
                 for x in range(0, len(list_short) - 1):
                     hex_grid.add_link(list_short[x].coord, list_short[x + 1].coord, "purple")
 
-
-
-
+    print('Le temps de parcours de Dijkstra =>', ttotal)
 
     for v in graphe_grid.vertex():
         # Modification of the color and the opacity of one cell
@@ -529,7 +527,7 @@ def carte_dikjrsta(hex_grid, nb_zone, nb_river):
 
 def carte_kruskal(hex_grid, nb_zone, nb_river):
     """
-    Show a card with the shortest path between each city
+    Show a card with the shortest path between each city with the kruskal algorithme
     :param hex_grid:
     :param nb_zone: the number of area we want in the graph
     :param nb_river: the number of rivers we want in the grid
@@ -551,7 +549,7 @@ def carte_kruskal(hex_grid, nb_zone, nb_river):
         y = random.randrange(0, hex_grid.get_width())
         v = graphe_grid.get_vertetx(x, y)
         d = random.randrange(1, 5)
-        biome = random.choices(tuple(dict_area.keys()), weights=(9, 1, 1, 1, 1, 1), #(9, 3, 5, 4, 2, 2)
+        biome = random.choices(tuple(dict_area.keys()), weights=(9, 3, 5, 4, 2, 2),
                                k=1)  # weights for the ponderation and k for the len of the list
         zone = graphe_grid.zone2(v, d, biome[0], dict_area[biome[0]])
         zones.append(zone)
@@ -571,8 +569,8 @@ def carte_kruskal(hex_grid, nb_zone, nb_river):
     # add edge (arrête) entre les Vertex
     for v in graphe_grid.vertex():
         # Add edges between vertex of the graph
-        list = graphe_grid.get_neighbour(v)
-        for v2 in list:
+        listN = graphe_grid.get_neighbour(v)
+        for v2 in listN:
             dist = dict_dist[v2.terrain] + (v.altitude - v2.altitude)
             if dist < 0:
                 dist = -dist
@@ -583,63 +581,46 @@ def carte_kruskal(hex_grid, nb_zone, nb_river):
             if v.terrain == 'royalblue' or v.terrain == 'red' or v.terrain == 'turquoise':
                 graphe_grid.remove_edge(v, v2, dist)
 
+    # Create a undergraph with all the cities
     gville = GraphList(False)
     for v in tab_ville:
         gville.add_vertex(v.coord, v.terrain, v.altitude)
 
-
     dict_chemin = {}
-    print(graphe_grid.edges())
 
     # Use the dijkstra algorithme to search the shortest path between two cities
     for v1 in tab_ville:
         for v2 in tab_ville:
             if v1 != v2:
-
-                tstart = time.time()
                 short = dijsktra(graphe_grid, v1)
-                print('Le temps de parcours de Dijkstra =>', time.time() - tstart)
                 list_short = chemin_dijkstra(short, v2)
-                print(graphe_grid.edges())
-                print(list_short)
-                w = 0
 
+                w = 0
+                ville1 = gville.get_vertetx(v1.coord[0], v1.coord[1])
+                ville2 = gville.get_vertetx(v2.coord[0], v2.coord[1])
+                dict_chemin[(ville1, ville2)] = list_short
 
                 # Show the link between vertex
                 for x in range(0, len(list_short) - 1):
-                    print('\n')
-                    graphe_grid.add_edge(list_short[x], list_short[x])
                     e1 = graphe_grid.get_vertetx(list_short[x].coord[0], list_short[x].coord[1])
-                    e2 = graphe_grid.get_vertetx(list_short[x+1].coord[0], list_short[x+1].coord[1])
-                    if e1 in graphe_grid.get_neighbour(e2):
-                        print('LE POIDS', graphe_grid.get_weight(e1, e2))
-                        hex_grid.add_link(list_short[x].coord, list_short[x + 1].coord, "purple")
-                    print('uhgfeiueghrfkzkerfhnzlk')
+                    e2 = graphe_grid.get_vertetx(list_short[x + 1].coord[0], list_short[x + 1].coord[1])
+                    w += graphe_grid.get_weight(e1, e2)
 
-                '''e1 = gville.get_vertetx(v1.coord[0], v1.coord[1])
-                e2 = gville.get_vertetx(v2.coord[0], v2.coord[1])
-                gville.add_edge(e1, e2, w)
-                dict_chemin[(e1, e2)] = list_short
+                gville.add_edge(ville1, ville2, w)
 
     # Use the kruskal algorithme to search the shortest path between two cities
     tstart = time.time()
-    short = kruskal_UF(gville)
-    print('Le temps de parcours de Kruskal =>', time.time() - tstart)'''
+    cheminK = kruskal_UF(gville)
+    print('Le temps de parcours de Kruskal =>', time.time() - tstart)
 
-    '''
-    for v1 in tab_ville:
-        for v2 in tab_ville:
-            if v1 != v2:
-                print('Le petit chemin=> ', short)
-                list_v = chemin_kruskal(short, v1, v2)
+    #print(cheminK)
+    for k, v in cheminK.items():
+        if v is not None:
+            for e in range (0, len(dict_chemin[(k,v)])-1):
+                hex_grid.add_link(dict_chemin[(k,v)][e].coord, dict_chemin[(k,v)][e + 1].coord, "purple")
 
-                for x in range(0, len(list_v) - 1):
-                    e1 = graphe_grid.get_vertetx(list_v[x].coord[0], list_v[x].coord[1])
-                    e2 = graphe_grid.get_vertetx(list_v[x + 1].coord[0], list_v[x + 1].coord[1])
-                    if e2 in graphe_grid.get_neighbour(e1):
-                        hex_grid.add_link(e1.coord, e2.coord, "black")
 
-    '''
+
     for v in graphe_grid.vertex():
         # Modification of the color and the opacity of one cell
         hex_grid.add_color(v)
@@ -651,9 +632,28 @@ def carte_kruskal(hex_grid, nb_zone, nb_river):
                          "red": "lava",
                          "darkred": "lava", "saddlebrown": "obscidian", "black": "obsidian", "turquoise": "lagon",
                          "green": "grass"},
-                  debug_coords=True)
+                  debug_coords=False)
 
-    '''
+
+    #########################
+
+
+
+
+
+'''
+
+e1 = gville.get_vertetx(v1.coord[0], v1.coord[1])
+e2 = gville.get_vertetx(v2.coord[0], v2.coord[1])
+gville.add_edge(e1, e2, w)
+dict_chemin[(e1, e2)] = list_short
+
+    # Use the kruskal algorithme to search the shortest path between two cities
+    tstart = time.time()
+    short = kruskal_UF(gville)
+    print('Le temps de parcours de Kruskal =>', time.time() - tstart)
+
+
         for key, v in short.items():
             if v is not None:
                 e1 = graphe_grid.get_vertetx(key.coord[0], key.coord[1])

@@ -197,72 +197,52 @@ Et on appelle la fonction show afin de pouvoir afficher notre graphe sous forme 
 ````
 
 ## Question 4:
-*Question réalisée par alexandre*
-
-Pour réaliser cette question, une fonction zone a été ajouté au fichier Graph_List.py.
-
+Pour créer une zone, nous avons dans un premier temps fait une fonction pour l'implementer dans la grille puis nous avons ajouté une classe 
 ```python
-    def zone(self, centre: Vertex, dist, dico: dict):
-        """
-        Get the area around a vertex
-        :type centre: the center vertex
-        :param dist: dist of the area
-        :param dico: the dictionary of the corresponding area
-        :return: zone of neighbor
-        en partant d'un sommet,
-        on va chercher à implémenter une zone autour de ce sommet.
-        Cette zone sera de rayon dist. (exemple : si je pars du centre, il faut que je parcoure tous les sommets autours
-        du centre puis les sommets autour des sommets du centre, etc).
-       """
-        queue = [(centre, 0)]
-        visited = set()
-        visited.add(centre)
+class Zone():
 
-        while queue:
-            current_vertex, current_distance = queue.pop(0)
-            current_vertex.terrain = dico[current_distance % 6]
-
-            if current_distance < dist:
-                neighbors = self.get_neighbour(current_vertex)
-
-                for neighbor in neighbors:
-                    if neighbor not in visited:
-                        queue.append((neighbor, current_distance + 1))
-                        visited.add(neighbor)
-
+    def __init__(self, vertexCentre: Vertex, distance, typeZone, areaDicoType):
+        self.centre = vertexCentre
+        self.distance = distance
+        self.typeZone=typeZone
+        self.areaDicoType = areaDicoType
 ```
-
 
 ## Question 5:
-Pour créer une rivière, nous recherchons les points les plus hauts de la grille à l'aide des fonctions
-```python
-#find_higher(self)
-# find_ListOfhigher(self)
-```
-La première retourne le sommet le plus haut et la deuxième retourne la list des sommets
+Pour créer une rivière, nous recherchons les points les plus hauts de la grille à l'aide de la fonction find_higher puis à l'aide d'un code DFS nous cherchons le chemin le plus long à partir de ces sommets
 
-A l'aide d'un code basé sur le DFS nous cherchons le chemin le plus long à partir de ces sommets. Nous utilisons alors :
-```python
-# DFSinner(self, ver: Vertex, parcours: list)
-# DFS(self, listVertNeigbour: [], vert: Vertex, path=None)
-# rivieres(self, listVertMaxAltitude: list)
-# riviere(self, vert: Vertex)
-```
-
-Concernant les embranchements si deux rivères se rejoignent elles vont juste devenir une seule rivière.
+Concernant les embranchements si deux rivères se rejoignent, elles vont juste devenir une seule rivière
 
 ## Qustion 6:
 Pour ajouter de la logique à notre carte, nous avons créé des zones ayant des altitudes dans un intervalle défini qui varie faiblement d'un voisin à l'autre  que nous ajoutons sur notre crate qui à également des sommets d'altitudes aléatoire
 
 ## Question 7 :
-Pour trouver le chemin le plus rapide entre 2 villes, nous utilisons la fonction pcc qui detremine le plus court chemin entre deux sommets quand nous n'avons pas de contraintes de pondération.
+Pour trouver le chemin le plus rapide entre 2 villes, nous utilisons la fonction pcc qui determine le plus court chemin entre deux sommets quand nous n'avons pas de contraintes de pondération.
 Il s'agit d'un algorithme ayant une complexité temporelle en O(|S|+|A|) avec S le nombre de sommets du graphe et A le nombre d'arrêtes.
 
+Voici le tableau avec la compexité temporelle en fonction du nombre de villes et de la taille de la grille :
+
+![img_1.png](img_1.png)
+
 ## Question 8:
-Maintenant, nous pouvons pondérer les arètes en fonction du type de terrain
-Pour empecher les chemins de passer par les rivières il faut supprimer les arrêtes des sommets par lesquels passent une rivière ou une zone aquatique
+Maintenant, nous pouvons pondérer les arêtes en fonction du type de terrain. Pour se faire nous prenons le poids du type de terrain d'arrivé, prédéfini dans le dictionnaire:
+```python
+dict_dist = { 'gray' : 1, 'darkolivegreen':1, 'sandybrown' : 2, 'forestgreen' : 2, 'darkgreen' : 2, 'sienna':3, 'black': 2,
+              'snow':4, 'darkred':4, 'saddlebrown': 3, 'green': 1, 'royalblue': 50, 'red': 50, 'turquoise': 50}
+``` 
+à cette valeur, nous ajoutons la différence d'altitude entre les deux sommets pour obtenir des poids propres à chaque arête.
+Pour empecher les chemins de passer par les rivières, il faut supprimer les arrêtes des sommets par lesquels passent une rivière ou une zone aquatique. Il faut également empêcher les passage dans la lave en utilisant la même méthode.
+
+Voici un tableau pour représenter la complexité temporelle en fonction du nombre de ville et la taille de la grille:
+![img_2.png](img_2.png)
 
 ## Question 9:
-Pour creer ce réseau le mieux est d'utiliser l'algorithme de Kruskal
+Pour créer ce réseau le mieux est d'utiliser l'algorithme de Kruskal.
+Nous avons rencontré de nombreuses difficultés lors de l'implémentation de cet algorithme dans notre code en le liant avec la grille et en utilisant la classe vertex qui contient toutes les informations sur un sommet.
+Nous avons dans un premier temps eu du mal, car les arrêtés ne s'affichaient pas uniquement avec des sommets voisins mais avec des sommets d'un côté à l'autre de la carte.
+Ensuite le plus gros problème que nous avons rencontré est le fait que certaines arêtes présentes sur le chemin disparaissaient nous empêchant de determine le chemin en entier entre deux villes. Ce problème de disparition d'arrêtes 
+est certainement lié au fait que nous supprimons les arrêtes passant dans les rivières et que nous n'avions pas encore enlever le fait qu'une ville puisse apparaitre dans un rivère.
 
 ## Question 10:
+
+Étant donné nos difficultés pour implémenter et répondre à la question précédente nous n'avons pas eu le temps de résoudre cette question.
